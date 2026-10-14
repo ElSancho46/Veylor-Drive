@@ -29,7 +29,8 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+#app{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
 [hidden]{display:none!important}
 img{max-width:100%}
@@ -335,7 +336,7 @@ let toastT;function toast(t){const el=$('#toast');el.textContent=t;el.hidden=fal
 
 function isForm(){return S.view?['missionForm','pv','fraisForm'].includes(S.view.type):S.tab==='reglages'}
 function update(){if(isForm()){S.pending=true;return}render()}
-function go(view){S.view=view;S.confirm=null;S.pending=false;formInputs=null;render();window.scrollTo(0,0)}
+function go(view){S.view=view;S.confirm=null;S.pending=false;formInputs=null;render();($('#app').scrollTop=0)}
 
 /* ---------- Silhouettes de voitures ---------- */
 const SHAPES={
@@ -369,9 +370,10 @@ async function init(){
   if(!FB_OK||!window.firebase){S.authReady=true;render();return}
   firebase.initializeApp(FIREBASE_CONFIG);
   const db=firebase.firestore();
-  try{await db.enablePersistence({synchronizeTabs:true})}catch(e){}
+  try{await Promise.race([db.enablePersistence({synchronizeTabs:true}).catch(()=>{}),new Promise(r=>setTimeout(r,2000))])}catch(e){}
   S.db=db;S.assets={upload:async b=>({id:await putPhoto(b)})};S.downloads={};
   let unsubs=[];
+  setTimeout(()=>{if(!S.authReady){S.slow=true;render()}},12000);
   firebase.auth().onAuthStateChanged(u=>{
     S.user=u;S.authReady=true;unsubs.forEach(f=>f());unsubs=[];S.loaded={m:false,f:false};
     if(u){
@@ -420,7 +422,7 @@ function noDbBanner(){return S.noDb?`<div class="banner">Les données partagées
 function render(){
   const app=$('#app');let h='';
   if(!FB_OK){app.innerHTML=viewSetup();return}
-  if(!S.authReady){app.innerHTML='<div class="wrap"><div class="empty" style="margin-top:40vh"><b>Veylor Drive</b>Chargement…</div></div>';return}
+  if(!S.authReady){app.innerHTML='<div class="wrap"><div class="empty" style="margin-top:35vh"><b>Veylor Drive</b>'+(S.slow?'Le chargement est anormalement long. Vérifie ta connexion internet.<div style="margin-top:14px"><button class="btn primary" onclick="location.reload()">Recharger</button></div>':'Chargement…')+'</div></div>';return}
   if(!S.user){app.innerHTML=viewLogin();return}
   if(S.view){
     const t=S.view.type;
@@ -822,7 +824,7 @@ document.addEventListener('click',async e=>{
   case 'logout':firebase.auth().signOut();break;
   case 'forgot':{const em=(($('#l_email')||{}).value||'').trim();if(!em){showErr('Écris d\'abord ton e-mail, puis appuie sur « Mot de passe oublié ? ».');return}
     try{await firebase.auth().sendPasswordResetEmail(em);toast('E-mail envoyé à '+em)}catch(err){showErr('Envoi impossible. Vérifie l\'adresse e-mail.')}break}
-  case 'tab':S.tab=v;S.view=null;S.draft=null;formInputs=null;render();window.scrollTo(0,0);break;
+  case 'tab':S.tab=v;S.view=null;S.draft=null;formInputs=null;render();($('#app').scrollTop=0);break;
   case 'filtre':S.filtre=v;render();break;
   case 'who':S.who=v;render();break;
   case 'open':go({type:'mission',id});break;
