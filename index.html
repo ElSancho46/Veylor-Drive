@@ -8,6 +8,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Veylor Drive">
 <meta name="theme-color" content="#0A0A0A">
+<script>
+(function(){function setH(){var st=window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
+ var h=window.innerHeight;if(st&&screen&&screen.height){var portrait=window.innerWidth<window.innerHeight;var full=portrait?Math.max(screen.height,screen.width):Math.min(screen.height,screen.width);if(full>h)h=full}
+ document.documentElement.style.setProperty('--appH',h+'px')}
+ setH();window.addEventListener('resize',setH);window.addEventListener('orientationchange',function(){setTimeout(setH,300)})})();
+</script>
 <link rel="apple-touch-icon" href="icon.PNG">
 <link rel="icon" type="image/png" href="icon.PNG">
 <title>Veylor Drive</title>
@@ -30,7 +36,7 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
-#app{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:env(safe-area-inset-bottom,0px)}
+#app{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;bottom:auto;height:calc(var(--appH,100vh) - env(safe-area-inset-top,0px));overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:env(safe-area-inset-bottom,0px)}
 .top{top:0!important}
 .grid2>*{min-width:0}
 input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;width:100%;min-height:46px;text-align:left}
@@ -121,10 +127,10 @@ h2{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:1.25re
 .btn.small{padding:8px 12px;font-size:.85rem;border-radius:10px}
 .btn.block{width:100%}
 .btn:disabled{opacity:.45}
-.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(82px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);border:0;border-radius:999px;padding:15px 20px;font-family:var(--display);font-stretch:112%;font-weight:800;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 8px 28px rgba(0,0,0,.6);z-index:5}
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:auto;top:calc(var(--appH,100vh) - 82px - env(safe-area-inset-bottom,0px));transform:translateY(-100%);background:var(--fg);color:var(--bg);border:0;border-radius:999px;padding:15px 20px;font-family:var(--display);font-stretch:112%;font-weight:800;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 8px 28px rgba(0,0,0,.6);z-index:5}
 
 /* Onglets */
-.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(10,10,10,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:6}
+.tabs{position:fixed;left:0;right:0;bottom:auto;top:var(--appH,100vh);transform:translateY(-100%);background:rgba(10,10,10,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:6}
 .tab{background:none;border:0;padding:10px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 .tab svg{width:22px;height:22px}
 .tab[aria-current="page"]{color:var(--fg)}
@@ -211,7 +217,7 @@ textarea{min-height:84px;resize:vertical}
 .frow .s{font-size:.82rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .banner{border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:.9rem;margin-top:12px;color:var(--muted)}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:700;z-index:20;max-width:calc(100% - 32px);text-align:center}
+.toast{position:fixed;left:50%;transform:translate(-50%,-100%);bottom:auto;top:calc(var(--appH,100vh) - 96px - env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:700;z-index:20;max-width:calc(100% - 32px);text-align:center}
 .confirm{border:1px solid var(--danger);border-radius:12px;padding:14px;margin-top:10px;display:flex;flex-direction:column;gap:10px}
 /* Version native iPhone : typographie système, vraies photos */
 *{font-stretch:normal!important}
