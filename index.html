@@ -40,6 +40,43 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 .top{top:0!important}
 .grid2>*{min-width:0}
 .addr{position:relative}
+.gearwrap{position:absolute;top:12px;right:max(16px,env(safe-area-inset-right,0px));z-index:4}
+.gear{display:flex;flex-direction:column;align-items:center;gap:2px;background:rgba(10,10,10,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:14px;padding:7px 9px;color:var(--fg);font-size:.62rem;font-weight:700}
+.gear svg{width:20px;height:20px}
+.gear.on{background:var(--fg);color:var(--bg)}
+.mini .gear{margin-top:4px}
+.linkbtn{background:none;border:0;padding:0;color:var(--fg);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.calc{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;font-size:.9rem}
+.calcrow{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.calcrow b{display:block;font-size:1.1rem}
+.calcrow .btn{margin-left:auto}
+.search input{border-radius:999px;padding-left:16px}
+.crow{display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 14px;text-align:left;width:100%;color:var(--fg)}
+.cav{width:42px;height:42px;border-radius:50%;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem}
+.cmain{min-width:0;display:flex;flex-direction:column}
+.cmain b,.cmain small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmain small,.cside small{color:var(--muted);font-size:.8rem}
+.cside{display:flex;flex-direction:column;align-items:flex-end}
+.pdays{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.pday{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.pday.today{border-color:var(--fg)}
+.pday.past{opacity:.6}
+.phead{display:flex;align-items:center;gap:8px;padding:10px 12px 8px 14px;font-size:.92rem}
+.phead>span:first-child{flex:1}
+.tag-today{background:var(--fg);color:var(--bg);font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:3px 8px}
+.padd{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--fg);font-size:1.1rem;font-weight:700;line-height:1}
+.pfree{padding:0 14px 12px;color:var(--dim);font-size:.85rem}
+.prow{display:grid;grid-template-columns:50px 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 12px 10px 14px;color:var(--fg)}
+.list .prow{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.prow.clash{background:rgba(229,72,77,.12)}
+.ptime{font-weight:600;font-size:.9rem}
+.pmain{min-width:0;display:flex;flex-direction:column}
+.pmain b,.pmain small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pmain small{color:var(--muted);font-size:.8rem}
+.pmain small.warn{color:var(--danger);font-weight:700}
+.pside{display:flex;align-items:center;gap:6px}
+.pside .who{width:24px;height:24px;border-radius:50%;border:1px solid var(--fg);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:var(--fg)}
+.tab span{font-size:.62rem}
 .sugg{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;overflow:hidden;z-index:20;box-shadow:0 12px 30px rgba(0,0,0,.6)}
 .sugg button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:11px 13px;font-weight:600;font-size:.95rem;color:var(--fg)}
 .sugg button:last-child{border-bottom:0}
@@ -136,7 +173,7 @@ h2{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:1.25re
 .fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:auto;top:calc(var(--appH,100vh) - 80px - env(safe-area-inset-bottom,0px) * .2);transform:translateY(-100%);background:var(--fg);color:var(--bg);border:0;border-radius:999px;padding:15px 20px;font-family:var(--display);font-stretch:112%;font-weight:800;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 8px 28px rgba(0,0,0,.6);z-index:5}
 
 /* Onglets */
-.tabs{position:fixed;left:0;right:0;bottom:auto;top:var(--appH,100vh);transform:translateY(-100%);background:rgba(10,10,10,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:calc(env(safe-area-inset-bottom,0px) * .2 + 2px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:6}
+.tabs{position:fixed;left:0;right:0;bottom:auto;top:var(--appH,100vh);transform:translateY(-100%);background:rgba(10,10,10,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:calc(env(safe-area-inset-bottom,0px) * .2 + 2px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:6}
 .tab{background:none;border:0;padding:10px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 .tab svg{width:22px;height:22px}
 .tab[aria-current="page"]{color:var(--fg)}
@@ -330,7 +367,7 @@ const MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','
 const eur=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'});
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 
-const S={db:null,assets:null,downloads:null,missions:[],frais:[],config:{convoyeurs:['Rafael'],societe:'',tel:'',tel2:''},
+const S={db:null,assets:null,downloads:null,missions:[],frais:[],clients:[],clientQ:'',semaine:null,config:{convoyeurs:['Rafael'],societe:'',tel:'',tel2:'',tarifKm:'',prixMin:''},
   loaded:{m:false,f:false},noDb:false,tab:'missions',view:null,filtre:'avenir',who:'tous',mois:today().slice(0,7),pending:false,draft:null,confirm:null,busy:false,slide:0,user:null,authReady:false};
 
 const $=s=>document.querySelector(s);
@@ -351,7 +388,7 @@ const fmtDate=d=>{if(!d)return '';const [y,m,j]=d.split('-');return +j+' '+MOIS[
 const shortDate=d=>{if(!d)return 'Sans date';const [,m,j]=d.split('-');const t=today();if(d===t)return "Aujourd'hui";return +j+' '+MOIS[+m-1].slice(0,4)+(MOIS[+m-1].length>4?'.':'')};
 let toastT;function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,2600)}
 
-function isForm(){return S.view?['missionForm','pv','fraisForm'].includes(S.view.type):S.tab==='reglages'}
+function isForm(){return S.view?['missionForm','pv','fraisForm','clientForm'].includes(S.view.type):S.tab==='reglages'}
 function update(){if(isForm()){S.pending=true;return}render()}
 function go(view){S.view=view;S.confirm=null;S.pending=false;formInputs=null;render();($('#app').scrollTop=0)}
 
@@ -395,8 +432,9 @@ async function init(){
     S.user=u;S.authReady=true;unsubs.forEach(f=>f());unsubs=[];S.loaded={m:false,f:false};
     if(u){
       unsubs.push(db.collection('missions').onSnapshot(s=>{S.missions=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.m=true;update()},e=>{toast('Missions indisponibles : '+e.message)}));
+      unsubs.push(db.collection('clients').onSnapshot(s=>{S.clients=s.docs.map(d=>({id:d.id,...d.data()}));update()},()=>{}));
       unsubs.push(db.collection('frais').onSnapshot(s=>{S.frais=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.f=true;update()},()=>{}));
-      unsubs.push(db.doc('config/equipe').onSnapshot(s=>{if(s.exists){const c=s.data()||{};S.config={convoyeurs:(c.convoyeurs&&c.convoyeurs.length)?c.convoyeurs:['Rafael'],societe:c.societe||'',tel:c.tel||'',tel2:c.tel2||'',cover:c.cover||null}}update()},()=>{}));
+      unsubs.push(db.doc('config/equipe').onSnapshot(s=>{if(s.exists){const c=s.data()||{};S.config={convoyeurs:(c.convoyeurs&&c.convoyeurs.length)?c.convoyeurs:['Rafael'],societe:c.societe||'',tel:c.tel||'',tel2:c.tel2||'',cover:c.cover||null,tarifKm:c.tarifKm||'',prixMin:c.prixMin||''}}update()},()=>{}));
     }else{S.missions=[];S.frais=[]}
     S.view=null;S.draft=null;render();
   });
@@ -407,6 +445,9 @@ const IC={
  missions:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h-1a1 1 0 0 1-1-1v-4l2-5h10l3 5h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M9.5 17h5"/></svg>',
  frais:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>',
  bilan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+ planning:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M7.5 14h2M11 14h2M14.5 14h2M7.5 17.5h2M11 17.5h2"/></svg>',
+ clients:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="15" height="18" rx="2"/><circle cx="11.5" cy="10" r="2.6"/><path d="M7.5 17c.6-2.2 2.2-3.3 4-3.3s3.4 1.1 4 3.3"/><path d="M2 7h3M2 12h3M2 17h3"/></svg>',
+ gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
  reglages:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5c2.4.2 4 1.8 4.5 4.5"/></svg>'
 };
 
@@ -430,9 +471,10 @@ function viewLogin(){return `<div class="wrap">${loginHero()}
   </form></div>`}
 function viewSetup(){return `<div class="wrap">${loginHero()}<div class="panel"><span class="label">Configuration</span><p style="margin:0">La base de données n'est pas encore branchée. Colle le bloc de configuration Firebase en haut du fichier <b>index.html</b>.</p></div></div>`}
 function brandWords(){const n=(S.config.societe||'Veylor Drive').trim().split(/\s+/);return [n[0],n.slice(1).join(' ')||'Convoyeur automobile']}
-function mini(l1){return `<div class="mini"><div class="today">${esc(S.config.societe||'Veylor Drive')}</div><h1 class="display">${esc(l1)}</h1></div>`}
+function gearBtn(){return `<button class="gear${S.tab==='reglages'&&!S.view?' on':''}" data-act="tab" data-v="reglages" aria-label="Équipe et réglages">${IC.gear}<span>Équipe</span></button>`}
+function mini(l1){return `<div class="mini"><div class="row between" style="align-items:flex-start"><div><div class="today">${esc(S.config.societe||'Veylor Drive')}</div><h1 class="display">${esc(l1)}</h1></div>${gearBtn()}</div></div>`}
 function vehPhoto(m){if(m.cover)return m.cover;const ph=(m.pvDepart&&m.pvDepart.photos)||(m.pvArrivee&&m.pvArrivee.photos)||null;if(!ph)return null;return ph['Avant']||ph['Côté gauche']||ph['Côté droit']||Object.values(ph).find(Boolean)||null}
-function tabs(){return `<nav class="tabs">${[['missions','Missions'],['frais','Frais'],['bilan','Bilan'],['reglages','Équipe']].map(([k,l])=>`<button class="tab" data-act="tab" data-v="${k}" ${S.tab===k&&!S.view?'aria-current="page"':''}>${IC[k]}<span>${l}</span></button>`).join('')}</nav>`}
+function tabs(){return `<nav class="tabs">${[['missions','Missions'],['planning','Planning'],['clients','Clients'],['frais','Frais'],['bilan','Bilan']].map(([k,l])=>`<button class="tab" data-act="tab" data-v="${k}" ${S.tab===k&&!S.view?'aria-current="page"':''}>${IC[k]}<span>${l}</span></button>`).join('')}</nav>`}
 function whoChips(){const list=['tous',...S.config.convoyeurs];return `<div class="chips" role="group" aria-label="Convoyeur">${list.map(n=>`<button class="chip" data-act="who" data-v="${esc(n)}" aria-pressed="${S.who===n}">${n==='tous'?'Tout le monde':esc(n)}</button>`).join('')}</div>`}
 function noDbBanner(){return S.noDb?`<div class="banner">Les données partagées ne sont pas disponibles sur cet affichage. Ouvre l'appli depuis ton compte Claude pour voir et ajouter des missions.</div>`:''}
 
@@ -447,15 +489,21 @@ function render(){
     else if(t==='missionForm')h=viewMissionForm();
     else if(t==='pv')h=viewPV();
     else if(t==='fraisForm')h=viewFraisForm();
+    else if(t==='client')h=viewClient();
+    else if(t==='clientForm')h=viewClientForm();
   }else{
     if(S.tab==='missions')h=viewMissions();
     else if(S.tab==='frais')h=viewFrais();
     else if(S.tab==='bilan')h=viewBilan();
+    else if(S.tab==='planning')h=viewPlanning();
+    else if(S.tab==='clients')h=viewClients();
     else h=viewReglages();
   }
   app.innerHTML=h+(S.view&&isForm()?'':tabs());
   if(S.view&&S.view.type==='pv')setupSignature();
-  if(S.view&&S.view.type==='missionForm'){setupAddr('m_depart');setupAddr('m_arrivee')}
+  if(S.view&&S.view.type==='missionForm'){setupAddr('m_depart');setupAddr('m_arrivee');setupClientSugg();if(S.draft&&!S.draft.route)scheduleRoute(50)}
+  if(S.view&&S.view.type==='clientForm')setupAddr('c_adresse');
+  if(!S.view&&S.tab==='clients')setupClientSearch();
   restoreFraisInputs();
 }
 
@@ -480,7 +528,7 @@ function viewMissions(){
   const loading=!S.noDb&&!S.loaded.m;
   const dstr=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   return `<div class="wrap">
-   <div class="shero">${heroSlides().map(([src,pos],i)=>`<img class="slide${i===S.slide%heroSlides().length?' on':''}" src="${src}" style="object-position:${pos}" alt="">`).join('')}<div class="fade"></div>
+   <div class="shero">${heroSlides().map(([src,pos],i)=>`<img class="slide${i===S.slide%heroSlides().length?' on':''}" src="${src}" style="object-position:${pos}" alt="">`).join('')}<div class="fade"></div><div class="gearwrap">${gearBtn()}</div>
     <div class="txt"><h1 class="wm">${esc(brandWords()[0])}</h1><div class="sub">${esc(brandWords()[1])}</div><div class="line"></div><div class="date">${esc(dstr)}</div>${heroSlides().length>1?`<div class="dots">${heroSlides().map((_,i)=>`<i class="${i===S.slide%heroSlides().length?'on':''}"></i>`).join('')}</div>`:''}</div></div>
    <div class="hero" style="padding-top:0">
     <div class="kpis" style="margin-top:4px"><div><span class="label">À venir</span><b class="num">${S.missions.filter(m=>!m.statut||m.statut==='a_faire').length}</b></div><div><span class="label">En route</span><b class="num">${enRoute}</b></div><div><span class="label">CA ${esc(MOIS[+mois.slice(5)-1].slice(0,4))}.</span><b class="num" style="font-size:1.25rem;line-height:1.36">${eur.format(caMois).replace(/,00\s?€/,' €')}</b></div></div>
@@ -517,6 +565,7 @@ function pvSummary(m,phase){
   if(!pv)return `<div class="panel"><span class="label">${label}</span><p class="muted" style="margin:0 0 12px">Pas encore fait.</p><button class="btn primary block" data-act="pv" data-v="${phase}">Faire l'état des lieux</button></div>`;
   const photos=Object.entries(pv.photos||{}).filter(([,v])=>v);
   return `<div class="panel"><div class="row between" style="margin-bottom:10px"><span class="label">${label}</span><span class="when">${esc(pv.fait||'')}</span></div>
+    ${pv.lieu||pv.gps?`<p class="muted" style="margin:-4px 0 10px;font-size:.85rem">Lieu : ${esc(pv.lieu||'')}${pv.gps?` <span class="mono">(${pv.gps.lat.toFixed(5)}, ${pv.gps.lon.toFixed(5)})</span>`:''}</p>`:''}
    <div class="pvsum"><div><span class="label">Compteur</span><b class="num">${pv.km?esc(Number(pv.km).toLocaleString('fr-FR')):'–'}</b></div><div><span class="label">Carburant</span><b>${pv.carburant!=null?esc(FUEL[pv.carburant]):'–'}</b></div><div><span class="label">Photos</span><b class="num">${photos.length}</b></div></div>
    ${pv.dommages?`<p style="margin:0 0 12px"><b>Dommages :</b> ${esc(pv.dommages)}</p>`:'<p class="muted" style="margin:0 0 12px">Aucun dommage noté.</p>'}
    ${photos.length?`<div class="thumbs" style="margin-bottom:12px">${photos.map(([k,v])=>`<div class="slot filled"><img src="${blob(v)}" alt="${esc(k)}"><span class="lbl">${esc(k)}</span></div>`).join('')}</div>`:''}
@@ -525,13 +574,13 @@ function pvSummary(m,phase){
 }
 function viewMission(){
   const m=S.missions.find(x=>x.id===S.view.id);
-  if(!m)return `<div class="wrap"><div class="top"><button class="back" data-act="back">← Missions</button></div><div class="empty"><b>Mission introuvable</b>Elle a peut-être été supprimée.</div></div>`;
+  if(!m)return `<div class="wrap"><div class="top"><button class="back" data-act="back">← Retour</button></div><div class="empty"><b>Mission introuvable</b>Elle a peut-être été supprimée.</div></div>`;
   const fr=fraisDeMission(m.id);const totF=fr.reduce((s,f)=>s+num(f.montant),0);
   const idx=STATUTS.findIndex(s=>s[0]===(m.statut||'a_faire'));
   const aller=(m.statut==='a_faire'||!m.statut);const dest=aller?m.depart:m.arrivee;
   const km=(m.pvDepart&&m.pvArrivee&&m.pvDepart.km&&m.pvArrivee.km)?num(m.pvArrivee.km)-num(m.pvDepart.km):null;
   return `<div class="wrap">
-   <div class="top"><button class="back" data-act="back">← Missions</button><button class="btn small" data-act="editMission">Modifier</button></div>
+   <div class="top"><button class="back" data-act="back">← Retour</button><button class="btn small" data-act="editMission">Modifier</button></div>
    <div class="dhero">${vehPhoto(m)?`<div class="dphoto"><img src="${blob(vehPhoto(m))}" alt="Photo du véhicule"></div>`:''}<div class="today">${esc(fmtDate(m.date))}${m.heure?' à '+esc(m.heure):''}</div>
     <h1 class="display">${esc(m.marque||'Véhicule')}${m.modele?` <span style="color:var(--muted)">${esc(m.modele)}</span>`:''}</h1>
     <div class="meta">${plate(m.plaque,true)}${pill(m.statut)}</div>
@@ -542,11 +591,12 @@ function viewMission(){
    <div class="grid2" style="margin-top:8px"><a class="btn small" href="${waze(m.depart)}" target="_blank" rel="noopener">Vers le départ</a><a class="btn small" href="${waze(m.arrivee)}" target="_blank" rel="noopener">Vers l'arrivée</a></div></div>
 
    <div class="panel"><span class="label">Mission</span><dl class="kv">
-    <dt>Client</dt><dd><b>${esc(m.client)}</b></dd>
+    <dt>Client</dt><dd>${clientOf(m)?`<button class="linkbtn" data-act="openClient" data-id="${esc(clientOf(m).id)}">${esc(m.client)} →</button>`:`<b>${esc(m.client)}</b>`}</dd>
     ${m.tel?`<dt>Téléphone</dt><dd class="mono">${esc(m.tel)}</dd>`:''}
     <dt>Convoyeur</dt><dd>${esc(m.convoyeur||'–')}</dd>
     <dt>Départ</dt><dd>${esc(m.depart)}</dd><dt>Arrivée</dt><dd>${esc(m.arrivee)}</dd>
     ${m.contactArrivee?`<dt>Réception</dt><dd>${esc(m.contactArrivee)}</dd>`:''}
+    ${m.distanceKm?`<dt>Trajet estimé</dt><dd class="num">${esc(fmtKm(m.distanceKm))} · ${esc(fmtDuree(m.dureeMin))}</dd>`:''}
     ${km!=null?`<dt>Parcouru</dt><dd class="num">${esc(km.toLocaleString('fr-FR'))} km</dd>`:''}
     ${m.notes?`<dt>Notes</dt><dd>${esc(m.notes)}</dd>`:''}
    </dl></div>
@@ -567,8 +617,8 @@ function viewMission(){
 
 function opts(list,sel){return list.map(v=>`<option${v===sel?' selected':''}>${esc(v)}</option>`).join('')}
 function viewMissionForm(){
-  const m=S.view.id?(S.missions.find(x=>x.id===S.view.id)||{}):{date:today(),categorie:'berline',convoyeur:S.who!=='tous'?S.who:S.config.convoyeurs[0]};
-  if(!S.draft)S.draft={categorie:m.categorie||'berline',cover:m.cover||null,uploading:{}};
+  const m=S.view.id?(S.missions.find(x=>x.id===S.view.id)||{}):{date:S.view.date||today(),categorie:'berline',convoyeur:S.who!=='tous'?S.who:S.config.convoyeurs[0],...(S.view.prefill||{})};
+  if(!S.draft)S.draft={categorie:m.categorie||'berline',cover:m.cover||null,uploading:{},clientId:m.clientId||null,coords:{},route:m.distanceKm?{status:'ok',km:m.distanceKm,min:m.dureeMin,from:m.depart,to:m.arrivee}:null};
   const d=S.draft;
   return `<div class="wrap"><div class="top"><button class="back" data-act="cancelForm">← Annuler</button></div>
   <div class="formhead"><span class="label">${S.view.id?'Modifier':'Nouvelle'}</span><h1 class="display">Mission</h1></div>
@@ -576,11 +626,12 @@ function viewMissionForm(){
    <div><label style="margin-bottom:8px">Photo du véhicule <small>Facultatif. Sinon, la photo « Avant » de l'état des lieux sera utilisée.</small></label>${S.assets?`<button type="button" class="slot coverpick${d.cover?' filled':''}" data-act="photo" data-v="__cover">${d.cover?`<img src="${blob(d.cover)}" alt="">`:''}${d.uploading.__cover?'<span>Envoi…</span>':d.cover?'<span class="lbl">Changer la photo</span>':'<span>+ Ajouter une photo</span>'}</button>`:'<div class="banner">L\'ajout de photos demande l\'accès en modification à l\'appli.</div>'}</div>
    <div class="grid2"><label>Marque<input id="m_marque" value="${esc(m.marque)}" placeholder="Peugeot"></label><label>Modèle<input id="m_modele" value="${esc(m.modele)}" placeholder="3008"></label></div>
    <label>Plaque d'immatriculation<input id="m_plaque" class="mono" value="${esc(m.plaque)}" placeholder="AB-123-CD" autocapitalize="characters"></label>
-   <label>Client<input id="m_client" value="${esc(m.client)}" placeholder="Garage, particulier, loueur…" autocomplete="off"></label>
+   <label class="addr">Client <small>Tape le nom : tes clients enregistrés s'affichent</small><input id="m_client" value="${esc(m.client)}" placeholder="Garage, particulier, loueur…" autocomplete="off" autocorrect="off"><div class="sugg" hidden></div></label>
    <label>Téléphone du client<input id="m_tel" type="tel" value="${esc(m.tel)}" placeholder="06 12 34 56 78"></label>
    <div class="grid2"><label>Date<input id="m_date" type="date" value="${esc(m.date)}"></label><label>Heure<input id="m_heure" type="time" value="${esc(m.heure)}"></label></div>
    <label class="addr">Adresse de départ<input id="m_depart" value="${esc(m.depart)}" placeholder="Commence à taper l'adresse…" autocomplete="off" autocorrect="off"><div class="sugg" hidden></div></label>
    <label class="addr">Adresse d'arrivée<input id="m_arrivee" value="${esc(m.arrivee)}" placeholder="Commence à taper l'adresse…" autocomplete="off" autocorrect="off"><div class="sugg" hidden></div></label>
+   <div id="calc" class="calc">${calcHTML()}</div>
    <label>Contact à la livraison <small>Nom et téléphone de la personne qui réceptionne</small><input id="m_contactArrivee" value="${esc(m.contactArrivee)}"></label>
    <div class="grid2"><label>Prix (€)<input id="m_prix" inputmode="decimal" value="${esc(m.prix)}" placeholder="180"></label><label>Convoyeur<select id="m_convoyeur">${opts(S.config.convoyeurs,m.convoyeur)}</select></label></div>
    <label>Notes<textarea id="m_notes" placeholder="Clés à l'accueil, carte carburant fournie…">${esc(m.notes)}</textarea></label>
@@ -593,7 +644,7 @@ function readMissionInputs(){const f=document.querySelector('#fMission,#fConfig'
 
 function viewPV(){
   const m=S.missions.find(x=>x.id===S.view.id)||{};
-  if(!S.draft){const pv=m[S.view.phase]||{};S.draft={km:pv.km||'',carburant:pv.carburant??null,dommages:pv.dommages||'',signataire:pv.signataire||'',photos:{...(pv.photos||{})},signature:pv.signature||null,resign:!pv.signature,uploading:{}}}
+  if(!S.draft){const pv=m[S.view.phase]||{};S.draft={km:pv.km||'',carburant:pv.carburant??null,dommages:pv.dommages||'',signataire:pv.signataire||'',photos:{...(pv.photos||{})},meta:{...(pv.meta||{})},signature:pv.signature||null,resign:!pv.signature,uploading:{}}}
   const d=S.draft;
   const slots=[...ANGLES,...Object.keys(d.photos).filter(k=>!ANGLES.includes(k))];
   return `<div class="wrap"><div class="top"><button class="back" data-act="cancelForm">← Annuler</button>${plate(m.plaque)}</div>
@@ -601,7 +652,7 @@ function viewPV(){
   <form id="fPV" novalidate>
    <label>Kilométrage au compteur<input id="p_km" class="mono" inputmode="numeric" value="${esc(d.km)}" placeholder="48 250"></label>
    <div><label style="margin-bottom:8px">Niveau de carburant</label><div class="gauge" role="group" aria-label="Niveau de carburant">${FUEL.map((f,i)=>`<button type="button" class="${d.carburant!=null&&i<=d.carburant?'on':''}" data-act="fuel" data-v="${i}" aria-label="${f}">${i===0?'E':i===8?'F':''}</button>`).join('')}</div><div class="muted" style="font-size:.88rem;margin-top:6px">${d.carburant!=null?'Réservoir : '+FUEL[d.carburant]:'Touche la jauge pour indiquer le niveau'}</div></div>
-   <div><label style="margin-bottom:8px">Photos du véhicule</label>
+   <div><label style="margin-bottom:8px">Photos du véhicule <small>L'appareil photo s'ouvre directement. La date, l'heure et le lieu sont incrustés sur chaque photo.</small></label>
     ${S.assets?`<div class="thumbs">${slots.map(k=>{const id=d.photos[k];const up=d.uploading[k];return `<button type="button" class="slot${id?' filled':''}" data-act="photo" data-v="${esc(k)}">${id?`<img src="${blob(id)}" alt="">`:''}${up?'<span>Envoi…</span>':id?'':`<span>+ ${esc(k)}</span>`}${id?`<span class="lbl">${esc(k)}</span>`:''}</button>`}).join('')}<button type="button" class="slot" data-act="photo" data-v="__autre"><span>+ Autre</span></button></div>`
     :'<div class="banner">L\'ajout de photos demande l\'accès en modification à l\'appli.</div>'}
    </div>
@@ -700,7 +751,8 @@ function viewReglages(){
    <form id="fConfig" class="panel" novalidate>
     <label>Nom de la société <small>Affiché en haut de l'appli et sur les PV</small><input id="c_societe" value="${esc(c.societe)}" placeholder="Veylor Drive"></label>
     <div class="grid2"><label>Téléphone 1<input id="c_tel" type="tel" value="${esc(c.tel)}" placeholder="06 12 34 56 78"></label><label>Téléphone 2<input id="c_tel2" type="tel" value="${esc(c.tel2)}" placeholder="07 12 34 56 78"></label></div>
-    ${[0,1,2,3].map(i=>`<label>Convoyeur ${i+1}${i>1?' <small>Facultatif</small>':''}<input id="c_conv${i}" value="${esc(c.convoyeurs[i]||'')}" placeholder="${i===1?'Prénom de ton associé':'Prénom'}"></label>`).join('')}
+     <div class="grid2"><label>Prix au km (€) <small>Pour le prix conseillé</small><input id="c_tarifKm" inputmode="decimal" value="${esc(c.tarifKm)}" placeholder="0,80"></label><label>Prix minimum (€) <small>Petites missions</small><input id="c_prixMin" inputmode="decimal" value="${esc(c.prixMin)}" placeholder="60"></label></div>
+     ${[0,1,2,3].map(i=>`<label>Convoyeur ${i+1}${i>1?' <small>Facultatif</small>':''}<input id="c_conv${i}" value="${esc(c.convoyeurs[i]||'')}" placeholder="${i===1?'Prénom de ton associé':'Prénom'}"></label>`).join('')}
     <p class="err" id="fErr" hidden></p>
     <button class="btn primary block" type="submit">Enregistrer</button>
    </form>
@@ -762,10 +814,169 @@ function setupAddr(id){
       const r=await fetch('https://data.geopf.fr/geocodage/search?autocomplete=1&limit=6&q='+encodeURIComponent(q),{signal:ctrl.signal});
       const j=await r.json();if(my!==seq||document.activeElement!==inp)return;
       const f=(j.features||[]).map(x=>x.properties||{}).filter(p=>p.label);
-      box.innerHTML=f.length?f.map(p=>{const main=p.name||p.label;const sub=[p.postcode,p.city].filter(Boolean).join(' ');return `<button type="button" data-label="${esc(p.label)}">${esc(main)}<small>${esc(sub)}${p.context?' · '+esc(String(p.context).split(',').slice(-1)[0].trim()):''}</small></button>`}).join(''):'<div class="none">Aucune adresse trouvée, tu peux la saisir à la main.</div>';
+      box.innerHTML=f.length?f.map(p=>{const main=p.name||p.label;const sub=[p.postcode,p.city].filter(Boolean).join(' ');const co=(x=>x&&x.geometry?x.geometry.coordinates:null)(j.features.find(z=>z.properties===p));return `<button type="button" data-label="${esc(p.label)}" data-lon="${co?co[0]:''}" data-lat="${co?co[1]:''}">${esc(main)}<small>${esc(sub)}${p.context?' · '+esc(String(p.context).split(',').slice(-1)[0].trim()):''}</small></button>`}).join(''):'<div class="none">Aucune adresse trouvée, tu peux la saisir à la main.</div>';
       box.hidden=false}catch(e){if(e.name!=='AbortError')hide()}},250)});
-  box.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;e.preventDefault();inp.value=b.dataset.label;hide();inp.blur()});
+  box.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;e.preventDefault();inp.value=b.dataset.label;if(S.draft&&S.draft.coords&&b.dataset.lon)S.draft.coords[id]={label:b.dataset.label,c:[+b.dataset.lon,+b.dataset.lat]};hide();inp.blur();if(id==='m_depart'||id==='m_arrivee')scheduleRoute(50)});
+  inp.addEventListener('blur',()=>{setTimeout(hide,150);if(id==='m_depart'||id==='m_arrivee')scheduleRoute(600)});
+}
+
+/* ---------- Outils ---------- */
+const norm=v=>String(v||'').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ');
+const fmtKm=k=>Math.round(num(k)).toLocaleString('fr-FR')+' km';
+const fmtDuree=m=>{m=Math.round(num(m));if(!m)return '';const h=Math.floor(m/60),mm=m%60;return h?h+' h '+String(mm).padStart(2,'0'):mm+' min'};
+const isoD=x=>x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');
+function mondayOf(d){const x=new Date(d);const day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);x.setHours(12,0,0,0);return x}
+const minutesOf=h=>{if(!h)return null;const [a,b]=h.split(':').map(Number);return a*60+(b||0)};
+function clientOf(m){if(!m)return null;return (m.clientId&&S.clients.find(c=>c.id===m.clientId))||S.clients.find(c=>norm(c.nom)===norm(m.client))||null}
+function missionsOfClient(c){return S.missions.filter(m=>m.clientId===c.id||(!m.clientId&&norm(m.client)===norm(c.nom)))}
+
+/* ---------- Conflits de planning ---------- */
+function chevauche(a,b){
+  if(a.convoyeur!==b.convoyeur||!a.date||a.date!==b.date)return false;
+  const sa=minutesOf(a.heure),sb=minutesOf(b.heure);
+  if(sa==null||sb==null)return true;
+  const ea=sa+(num(a.dureeMin)||120),eb=sb+(num(b.dureeMin)||120);
+  return sa<eb&&sb<ea;
+}
+function conflitsPour(m){return S.missions.filter(x=>x.id!==m.id&&x.statut!=='payee'&&chevauche(m,x))}
+
+/* ---------- Planning ---------- */
+function viewPlanning(){
+  if(!S.semaine)S.semaine=isoD(mondayOf(new Date()));
+  const start=new Date(S.semaine+'T12:00:00');const days=[...Array(7)].map((_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);return d});
+  let ms=S.missions.slice();if(S.who!=='tous')ms=ms.filter(m=>m.convoyeur===S.who);
+  const t=today();const inWeek=ms.filter(m=>m.date&&m.date>=isoD(days[0])&&m.date<=isoD(days[6]));
+  const ca=inWeek.reduce((s,m)=>s+num(m.prix),0),km=inWeek.reduce((s,m)=>s+num(m.distanceKm),0);
+  const end=days[6];const titre=days[0].getMonth()===end.getMonth()?`${days[0].getDate()} – ${end.getDate()} ${MOIS[end.getMonth()]}`:`${days[0].getDate()} ${MOIS[days[0].getMonth()].slice(0,4)}. – ${end.getDate()} ${MOIS[end.getMonth()].slice(0,4)}.`;
+  const initiale=n=>esc((n||'?').slice(0,1).toUpperCase());
+  const row=m=>{const clash=conflitsPour(m).length>0;return `<button class="prow${clash?' clash':''}" data-act="open" data-id="${esc(m.id)}">
+     <span class="ptime mono">${esc(m.heure||'--:--')}</span>
+     <span class="pmain"><b>${esc([m.marque,m.modele].filter(Boolean).join(' ')||m.client||'Mission')}</b><small>${esc(ville(m.depart))} → ${esc(ville(m.arrivee))}${m.distanceKm?' · '+esc(fmtKm(m.distanceKm)):''}</small>${clash?'<small class="warn">⚠ Chevauchement</small>':''}</span>
+     <span class="pside"><span class="who" title="${esc(m.convoyeur||'')}">${initiale(m.convoyeur)}</span>${pill(m.statut)}</span></button>`};
+  const sansDate=ms.filter(m=>!m.date&&m.statut!=='livree'&&m.statut!=='payee');
+  return `<div class="wrap">${mini('Planning')}
+   <div class="monthnav"><button class="btn small" data-act="sem" data-v="-1" aria-label="Semaine précédente">←</button><b>${esc(titre)}</b><button class="btn small" data-act="sem" data-v="1" aria-label="Semaine suivante">→</button></div>
+   <div class="row" style="justify-content:center;margin-top:8px">${S.semaine!==isoD(mondayOf(new Date()))?'<button class="chip" data-act="semNow">Revenir à cette semaine</button>':''}</div>
+   <div class="kpis" style="margin-top:12px"><div><span class="label">Missions</span><b class="num">${inWeek.length}</b></div><div><span class="label">CA prévu</span><b class="num" style="font-size:1.25rem;line-height:1.36">${eur.format(ca).replace(/,00\s?€/,' €')}</b></div><div><span class="label">Km prévus</span><b class="num" style="font-size:1.25rem;line-height:1.36">${km?Math.round(km).toLocaleString('fr-FR'):'–'}</b></div></div>
+   ${S.config.convoyeurs.length>1?`<div style="margin-top:14px">${whoChips()}</div>`:''}
+   <div class="pdays">${days.map(d=>{const id=isoD(d);const list=ms.filter(m=>m.date===id).sort((a,b)=>(a.heure||'99').localeCompare(b.heure||'99'));
+     const jour=d.toLocaleDateString('fr-FR',{weekday:'long'});
+     return `<section class="pday${id===t?' today':''}${id<t?' past':''}"><div class="phead"><span><b>${esc(jour.charAt(0).toUpperCase()+jour.slice(1))}</b> ${d.getDate()} ${esc(MOIS[d.getMonth()])}</span>${id===t?'<span class="tag-today">Aujourd\'hui</span>':''}<button class="padd" data-act="newMissionDay" data-v="${id}" aria-label="Ajouter une mission ce jour">+</button></div>
+       ${list.length?list.map(row).join(''):'<div class="pfree">Libre</div>'}</section>`}).join('')}</div>
+   ${sansDate.length?`<h2>Sans date</h2><div class="list" style="margin-top:0">${sansDate.map(row).join('')}</div>`:''}
+  </div>`;
+}
+
+/* ---------- Clients ---------- */
+function clientRow(c){const ms=missionsOfClient(c);const ca=ms.reduce((s,m)=>s+num(m.prix),0);
+  return `<button class="crow" data-act="openClient" data-id="${esc(c.id)}"><span class="cav">${esc((c.nom||'?').slice(0,1).toUpperCase())}</span><span class="cmain"><b>${esc(c.nom)}</b><small>${esc([c.tel,ville(c.adresse)].filter(Boolean).join(' · ')||'Pas de coordonnées')}</small></span><span class="cside"><b class="num">${eur.format(ca).replace(/,00\s?€/,' €')}</b><small>${ms.length} mission${ms.length>1?'s':''}</small></span></button>`}
+function clientList(){const q=norm(S.clientQ);let cs=S.clients.slice().sort((a,b)=>norm(a.nom).localeCompare(norm(b.nom)));if(q)cs=cs.filter(c=>norm(c.nom+' '+c.tel+' '+c.adresse).includes(q));
+  return cs.length?cs.map(clientRow).join(''):(S.clients.length?'<div class="empty"><b>Aucun résultat</b>Essaie un autre nom.</div>':'<div class="empty"><b>Aucun client</b>Ajoute tes garages, loueurs et particuliers. Ils seront aussi ajoutés automatiquement quand tu crées une mission.</div>')}
+function viewClients(){
+  return `<div class="wrap">${mini('Clients')}
+   <label class="search"><input id="c_search" type="search" placeholder="Rechercher un client…" value="${esc(S.clientQ)}" autocomplete="off"></label>
+   <div id="clist" class="list">${clientList()}</div>
+  </div><button class="fab" data-act="newClient">+ Client</button>`;
+}
+function setupClientSearch(){const i=$('#c_search');if(!i)return;i.addEventListener('input',()=>{S.clientQ=i.value;const l=$('#clist');if(l)l.innerHTML=clientList()})}
+function viewClient(){
+  const c=S.clients.find(x=>x.id===S.view.id);
+  if(!c)return `<div class="wrap"><div class="top"><button class="back" data-act="back">← Retour</button></div><div class="empty"><b>Client introuvable</b>Il a peut-être été supprimé.</div></div>`;
+  const ms=missionsOfClient(c).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const ca=ms.reduce((s,m)=>s+num(m.prix),0);const impaye=ms.filter(m=>m.statut==='livree').reduce((s,m)=>s+num(m.prix),0);
+  return `<div class="wrap">
+   <div class="top"><button class="back" data-act="back">← Retour</button><button class="btn small" data-act="editClient">Modifier</button></div>
+   <div class="dhero"><div class="today">Client</div><h1 class="display">${esc(c.nom)}</h1></div>
+   <div class="stats" style="margin-top:6px"><div class="stat"><span class="label">Chiffre d'affaires</span><b class="num">${eur.format(ca)}</b></div><div class="stat"><span class="label">Missions</span><b class="num">${ms.length}</b></div><div class="stat"><span class="label">À encaisser</span><b class="num">${eur.format(impaye)}</b></div><div class="stat"><span class="label">Dernière mission</span><b style="font-size:1.05rem">${ms[0]&&ms[0].date?esc(fmtDate(ms[0].date)):'–'}</b></div></div>
+   <div class="panel"><span class="label">Coordonnées</span><dl class="kv">
+    ${c.tel?`<dt>Téléphone</dt><dd><a class="linkbtn" href="tel:${esc(c.tel.replace(/\s/g,''))}">${esc(c.tel)}</a></dd>`:''}
+    ${c.email?`<dt>E-mail</dt><dd><a class="linkbtn" href="mailto:${esc(c.email)}">${esc(c.email)}</a></dd>`:''}
+    ${c.adresse?`<dt>Adresse</dt><dd>${esc(c.adresse)}</dd>`:''}
+    ${c.notes?`<dt>Notes</dt><dd>${esc(c.notes)}</dd>`:''}
+    ${!c.tel&&!c.email&&!c.adresse&&!c.notes?'<dt>–</dt><dd class="muted">Aucune coordonnée. Appuie sur Modifier pour en ajouter.</dd>':''}
+   </dl></div>
+   <button class="btn primary block" style="margin-top:12px" data-act="missionForClient">+ Nouvelle mission pour ce client</button>
+   <h2>Historique</h2>${ms.length?`<div class="list" style="margin-top:0">${ms.map(missionCard).join('')}</div>`:'<div class="empty"><b>Aucune mission</b>Les missions de ce client apparaîtront ici.</div>'}
+   <div style="margin-top:24px">${S.confirm===c.id?`<div class="confirm"><b>Supprimer ce client ?</b><span class="muted">Ses missions sont conservées.</span><div class="row"><button class="btn danger" data-act="delClientOk">Oui, supprimer</button><button class="btn" data-act="cancelConfirm">Annuler</button></div></div>`:'<button class="btn danger small" data-act="delClient">Supprimer le client</button>'}</div>
+  </div>`;
+}
+function viewClientForm(){
+  const c=S.view.id?(S.clients.find(x=>x.id===S.view.id)||{}):{};
+  return `<div class="wrap"><div class="top"><button class="back" data-act="cancelForm">← Annuler</button></div>
+  <div class="formhead"><span class="label">${S.view.id?'Modifier':'Nouveau'}</span><h1 class="display">Client</h1></div>
+  <form id="fClient" novalidate>
+   <label>Nom <small>Garage, loueur, concession, particulier…</small><input id="c_nom" value="${esc(c.nom)}" autocomplete="off"></label>
+   <div class="grid2"><label>Téléphone<input id="c_ctel" type="tel" value="${esc(c.tel)}" placeholder="06 12 34 56 78"></label><label>E-mail<input id="c_email" type="email" value="${esc(c.email)}" autocapitalize="off"></label></div>
+   <label class="addr">Adresse <small>Proposée comme départ pour ses missions</small><input id="c_adresse" value="${esc(c.adresse)}" placeholder="Commence à taper l'adresse…" autocomplete="off" autocorrect="off"><div class="sugg" hidden></div></label>
+   <label>Notes<textarea id="c_notes" placeholder="Horaires d'ouverture, contact sur place, conditions de paiement…">${esc(c.notes)}</textarea></label>
+   <p class="err" id="fErr" hidden></p>
+   <button class="btn primary block" type="submit">Enregistrer</button>
+  </form></div>`;
+}
+function setupClientSugg(){
+  const inp=$('#m_client');if(!inp)return;const box=inp.parentNode.querySelector('.sugg');
+  const hide=()=>{box.hidden=true;box.innerHTML=''};
+  const show=()=>{const q=norm(inp.value);if(!q){hide();return}const cs=S.clients.filter(c=>norm(c.nom).includes(q)).slice(0,6);
+    if(!cs.length){box.innerHTML='<div class="none">Nouveau client : il sera ajouté au carnet à l\'enregistrement.</div>';box.hidden=false;return}
+    box.innerHTML=cs.map(c=>`<button type="button" data-id="${esc(c.id)}">${esc(c.nom)}<small>${esc([c.tel,ville(c.adresse)].filter(Boolean).join(' · ')||'Client enregistré')}</small></button>`).join('');box.hidden=false};
+  inp.addEventListener('input',()=>{if(S.draft)S.draft.clientId=null;show()});
+  box.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;e.preventDefault();const c=S.clients.find(x=>x.id===b.dataset.id);if(!c)return;
+    inp.value=c.nom;if(S.draft)S.draft.clientId=c.id;
+    const t=$('#m_tel');if(t&&!t.value&&c.tel)t.value=c.tel;const dp=$('#m_depart');if(dp&&!dp.value&&c.adresse){dp.value=c.adresse;scheduleRoute(100)}
+    hide();inp.blur()});
   inp.addEventListener('blur',()=>setTimeout(hide,150));
+}
+
+/* ---------- Calcul du trajet et du prix ---------- */
+function prixConseille(km){const t=num(S.config.tarifKm),mn=num(S.config.prixMin);if(!t)return null;let p=Math.max(km*t,mn);return Math.ceil(p/5)*5}
+function calcHTML(){
+  const r=S.draft&&S.draft.route;
+  if(!r)return '<span class="muted">Choisis les deux adresses pour calculer la distance et le prix conseillé.</span>';
+  if(r.status==='loading')return '<span class="muted">Calcul du trajet…</span>';
+  if(r.status==='err')return `<span class="muted">Trajet introuvable pour ces adresses.</span> <button type="button" class="linkbtn" data-act="calcRoute">Réessayer</button>`;
+  const p=prixConseille(r.km);
+  return `<div class="calcrow"><div><span class="label">Trajet</span><b class="num">${esc(fmtKm(r.km))} · ${esc(fmtDuree(r.min))}</b></div>${p!=null?`<div><span class="label">Prix conseillé</span><b class="num">${p} €</b></div><button type="button" class="btn small" data-act="applyPrice" data-v="${p}">Appliquer</button>`:''}</div>${p==null?'<div class="muted" style="font-size:.82rem;margin-top:6px">Indique ton prix au km dans Équipe pour avoir un prix conseillé.</div>':''}`;
+}
+let routeT=null,routeSeq=0;
+function scheduleRoute(ms){clearTimeout(routeT);routeT=setTimeout(computeRoute,ms==null?400:ms)}
+async function geocode(q){const r=await fetch('https://data.geopf.fr/geocodage/search?limit=1&q='+encodeURIComponent(q));const j=await r.json();const f=(j.features||[])[0];return f?f.geometry.coordinates:null}
+async function computeRoute(){
+  const d=S.draft;const a=$('#m_depart'),b=$('#m_arrivee'),box=$('#calc');if(!d||!a||!b||!box)return;
+  const from=a.value.trim(),to=b.value.trim();
+  if(from.length<5||to.length<5){d.route=null;box.innerHTML=calcHTML();return}
+  if(d.route&&d.route.status==='ok'&&d.route.from===from&&d.route.to===to){box.innerHTML=calcHTML();return}
+  const my=++routeSeq;d.route={status:'loading'};box.innerHTML=calcHTML();
+  try{
+    const ca=(d.coords.m_depart&&d.coords.m_depart.label===from)?d.coords.m_depart.c:await geocode(from);
+    const cb=(d.coords.m_arrivee&&d.coords.m_arrivee.label===to)?d.coords.m_arrivee.c:await geocode(to);
+    if(!ca||!cb)throw 0;
+    const r=await fetch(`https://data.geopf.fr/navigation/itineraire?resource=bdtopo-osrm&profile=car&optimization=fastest&distanceUnit=kilometer&timeUnit=minute&getSteps=false&start=${ca[0]},${ca[1]}&end=${cb[0]},${cb[1]}`);
+    const j=await r.json();if(!(j.distance>0))throw 0;
+    if(my!==routeSeq||S.draft!==d)return;
+    d.route={status:'ok',km:Math.round(j.distance),min:Math.round(j.duration),from,to};
+  }catch(e){if(my!==routeSeq||S.draft!==d)return;d.route={status:'err'}}
+  const bx=$('#calc');if(bx)bx.innerHTML=calcHTML();
+}
+
+/* ---------- GPS et horodatage des photos ---------- */
+let geoP=null;
+function getGeo(){return new Promise(res=>{if(!navigator.geolocation)return res(null);
+  navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lon:p.coords.longitude,acc:Math.round(p.coords.accuracy)}),()=>res(null),{enableHighAccuracy:true,timeout:10000,maximumAge:30000})})}
+async function lieuDe(g){if(!g)return '';try{const j=await Promise.race([fetch(`https://data.geopf.fr/geocodage/reverse?lon=${g.lon}&lat=${g.lat}&limit=1`).then(r=>r.json()),new Promise((_,rj)=>setTimeout(()=>rj(0),5000))]);
+  const p=((j.features||[])[0]||{}).properties||{};return p.label||[p.postcode,p.city].filter(Boolean).join(' ')||''}catch(e){return ''}}
+async function stampPhoto(b,meta){
+  const url=URL.createObjectURL(b);
+  try{const img=await loadImg(url);const w=img.naturalWidth,h=img.naturalHeight;const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(img,0,0);
+    const fs=Math.max(14,Math.round(w*0.026));const pad=Math.round(fs*0.6);const lines=[];
+    const dt=new Date(meta.t);lines.push(dt.toLocaleDateString('fr-FR')+' à '+dt.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+    if(meta.lieu)lines.push(meta.lieu);
+    lines.push(meta.lat!=null?'GPS '+meta.lat.toFixed(5)+', '+meta.lon.toFixed(5)+(meta.acc?' (±'+meta.acc+' m)':''):'Position GPS indisponible');
+    const bh=lines.length*fs*1.3+pad*2;x.fillStyle='rgba(0,0,0,.62)';x.fillRect(0,h-bh,w,bh);
+    x.fillStyle='#fff';x.font=`600 ${fs}px -apple-system,Helvetica,Arial,sans-serif`;x.textBaseline='top';
+    lines.forEach((l,i)=>{let t=l;while(x.measureText(t).width>w-pad*2&&t.length>4)t=t.slice(0,-2);if(t!==l)t=t.slice(0,-1)+'…';x.fillText(t,pad,h-bh+pad+i*fs*1.3)});
+    x.font=`700 ${Math.round(fs*0.85)}px -apple-system,Helvetica,Arial,sans-serif`;x.textAlign='right';x.fillText((S.config.societe||'Veylor Drive').toUpperCase(),w-pad,h-bh+pad);
+    return await new Promise(r=>c.toBlob(o=>r(o||b),'image/jpeg',.7))}
+  catch(e){return b}finally{URL.revokeObjectURL(url)}
 }
 
 /* ---------- Photos ---------- */
@@ -782,7 +993,11 @@ $('#filepick').addEventListener('change',async e=>{
   const file=e.target.files&&e.target.files[0];e.target.value='';if(!file||!photoTarget||!S.draft)return;
   const key=photoTarget;const d=S.draft;readPVInputs();readFraisInputs();readMissionInputs();
   d.uploading[key]=true;render();
-  try{const b=await compress(file);const res=await S.assets.upload(b,{type:'image/jpeg'});
+  try{let b=await compress(file);
+    const isPV=S.view&&S.view.type==='pv'&&!key.startsWith('__');
+    if(isPV){const g=await Promise.race([geoP||getGeo(),new Promise(r=>setTimeout(()=>r(null),8000))]);const lieu=g?await lieuDe(g):'';
+      const meta={t:Date.now(),lieu,...(g||{})};b=await stampPhoto(b,meta);if(!d.meta)d.meta={};d.meta[key]=meta}
+    const res=await S.assets.upload(b,{type:'image/jpeg'});
     if(S.draft!==d)return;
     if(key==='__ticket')d.photo=res.id;else if(key==='__cover')d.cover=res.id;else if(key==='__home')d.home=res.id;else d.photos[key]=res.id;}
   catch(err){toast(err&&err.code==='too_large'?'Photo trop lourde':'La photo n\'a pas pu être envoyée. Réessaie.')}
@@ -823,7 +1038,7 @@ async function pdfPV(m){
     const pv=m[phase];y+=4;if(y>250){doc.addPage();y=20}
     doc.setFillColor(10,10,10);doc.rect(14,y-5,182,8,'F');doc.setTextColor(244,244,242);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text(titre,16,y);doc.setTextColor(10,10,10);y+=9;
     if(!pv){doc.setFont('helvetica','italic');doc.text('Non réalisé.',14,y);y+=8;continue}
-    line('Fait le',pv.fait);line('Kilométrage',pv.km?Number(pv.km).toLocaleString('fr-FR').replace(/ | /g,' ')+' km':'–');line('Carburant',pv.carburant!=null?FUEL[pv.carburant]:'–');line('Dommages',pv.dommages||'Aucun dommage noté');
+    line('Fait le',pv.fait);if(pv.lieu||pv.gps)line('Lieu',(pv.lieu||'')+(pv.gps?' (GPS '+pv.gps.lat.toFixed(5)+', '+pv.gps.lon.toFixed(5)+')':''));line('Kilométrage',pv.km?Number(pv.km).toLocaleString('fr-FR').replace(/ | /g,' ')+' km':'–');line('Carburant',pv.carburant!=null?FUEL[pv.carburant]:'–');line('Dommages',pv.dommages||'Aucun dommage noté');
     const ph=Object.entries(pv.photos||{}).filter(([,v])=>v);
     if(ph.length){let x=14;const W=58,H=43;y+=2;
       for(const [k,id] of ph){const im=await imgData(id);if(y+H+8>285){doc.addPage();y=20;x=14}
@@ -855,6 +1070,17 @@ document.addEventListener('click',async e=>{
   const el=e.target.closest('[data-act]');if(!el)return;const act=el.dataset.act,v=el.dataset.v,id=el.dataset.id;
   switch(act){
   case 'logout':firebase.auth().signOut();break;
+  case 'openClient':go({type:'client',id});break;
+  case 'newClient':S.draft=null;go({type:'clientForm'});break;
+  case 'editClient':S.draft=null;go({type:'clientForm',id:S.view.id});break;
+  case 'delClient':S.confirm=S.view.id;render();break;
+  case 'delClientOk':{const cid=S.view.id;try{await S.db.doc('clients/'+cid).delete();S.view=null;S.confirm=null;render();toast('Client supprimé')}catch(err){toast('Suppression impossible')}break}
+  case 'missionForClient':{const c=S.clients.find(x=>x.id===S.view.id);if(!c)return;S.draft=null;formInputs=null;go({type:'missionForm',prefill:{client:c.nom,tel:c.tel||'',depart:c.adresse||'',clientId:c.id}});break}
+  case 'newMissionDay':S.draft=null;formInputs=null;go({type:'missionForm',date:v});break;
+  case 'sem':{const d=new Date((S.semaine||isoD(mondayOf(new Date())))+'T12:00:00');d.setDate(d.getDate()+7*(+v));S.semaine=isoD(mondayOf(d));render();break}
+  case 'semNow':S.semaine=isoD(mondayOf(new Date()));render();break;
+  case 'applyPrice':{const el=$('#m_prix');if(el){el.value=v;toast('Prix appliqué : '+v+' €')}break}
+  case 'calcRoute':scheduleRoute(0);break;
   case 'forgot':{const em=(($('#l_email')||{}).value||'').trim();if(!em){showErr('Écris d\'abord ton e-mail, puis appuie sur « Mot de passe oublié ? ».');return}
     try{await firebase.auth().sendPasswordResetEmail(em);toast('E-mail envoyé à '+em)}catch(err){showErr('Envoi impossible. Vérifie l\'adresse e-mail.')}break}
   case 'tab':S.tab=v;S.view=null;S.draft=null;formInputs=null;render();($('#app').scrollTop=0);break;
@@ -863,7 +1089,8 @@ document.addEventListener('click',async e=>{
   case 'open':go({type:'mission',id});break;
   case 'back':S.view=null;S.draft=null;render();break;
   case 'cancelForm':{const from=S.view;S.draft=null;fraisInputs=null;formInputs=null;
-    if(from.type==='pv'||(from.type==='missionForm'&&from.id))go({type:'mission',id:from.id});
+    if(from.type==='clientForm'&&from.id)go({type:'client',id:from.id});
+    else if(from.type==='pv'||(from.type==='missionForm'&&from.id))go({type:'mission',id:from.id});
     else if(from.type==='fraisForm'&&from.back)go(from.back);else{S.view=null;render()}break}
   case 'newMission':S.draft=null;formInputs=null;go({type:'missionForm'});break;
   case 'editMission':S.draft=null;formInputs=null;go({type:'missionForm',id:S.view.id});break;
@@ -872,7 +1099,7 @@ document.addEventListener('click',async e=>{
   case 'pv':S.draft=null;go({type:'pv',id:S.view.id,phase:v});break;
   case 'fuel':readPVInputs();S.draft.carburant=+v;render();break;
   case 'photo':{if(!S.assets)return;if(!S.draft)S.draft={uploading:{}};if(!S.draft.uploading)S.draft.uploading={};let key=v;if(key==='__autre'){let n=1;while(S.draft.photos['Photo '+n])n++;key='Photo '+n}
-    readFraisInputs();photoTarget=key;$('#filepick').click();break}
+    readFraisInputs();photoTarget=key;const fp=$('#filepick');if(S.view&&S.view.type==='pv'&&!key.startsWith('__')){geoP=getGeo();fp.setAttribute('capture','environment')}else fp.removeAttribute('capture');fp.click();break}
   case 'sigClear':{const c=$('#sig');if(c){c.getContext('2d').clearRect(0,0,c.width,c.height);sigDirty=false}break}
   case 'sigRedo':readPVInputs();S.draft.resign=true;render();break;
   case 'newFrais':S.draft=null;fraisInputs=null;go({type:'fraisForm',missionId:id||'',back:id?{type:'mission',id}:null});break;
@@ -913,10 +1140,18 @@ document.addEventListener('submit',async e=>{
     if(S.draft&&S.draft.uploading&&Object.keys(S.draft.uploading).length){showErr('Attends la fin de l\'envoi de la photo.');return}
     const data={categorie:(S.draft&&S.draft.categorie)||'berline',cover:(S.draft&&S.draft.cover)||null,client:val('m_client'),tel:val('m_tel'),date:val('m_date'),heure:val('m_heure'),depart:val('m_depart'),arrivee:val('m_arrivee'),contactArrivee:val('m_contactArrivee'),marque:val('m_marque'),modele:val('m_modele'),plaque:val('m_plaque').toUpperCase(),prix:val('m_prix').replace(',','.'),convoyeur:val('m_convoyeur'),notes:val('m_notes')};
     if(!data.client||!data.depart||!data.arrivee){showErr('Indique au minimum le client, l\'adresse de départ et l\'adresse d\'arrivée.');return}
+    const rt=S.draft&&S.draft.route;
+    if(rt&&rt.status==='ok'&&rt.from===data.depart&&rt.to===data.arrivee){data.distanceKm=rt.km;data.dureeMin=rt.min}
+    else if(S.view.id){data.distanceKm=null;data.dureeMin=null}
+    let cid=S.draft&&S.draft.clientId;const cl=cid&&S.clients.find(c=>c.id===cid);
+    if(!cl||norm(cl.nom)!==norm(data.client)){const ex=S.clients.find(c=>norm(c.nom)===norm(data.client));
+      if(ex)cid=ex.id;else{const ref=await S.db.collection('clients').add({nom:data.client,tel:data.tel,email:'',adresse:data.depart,notes:'',cree:Date.now()});cid=ref.id;toast('Client ajouté au carnet')}}
+    data.clientId=cid;
     let mid=S.view.id;
     if(mid)await S.db.doc('missions/'+mid).update(data);
     else{const ref=await S.db.collection('missions').add({...data,statut:'a_faire',creeLe:Date.now()});mid=ref.id}
-    toast(S.view.id?'Mission enregistrée':'Mission créée');S.draft=null;formInputs=null;go({type:'mission',id:mid});
+    const clash=conflitsPour({...data,id:mid});
+    toast(clash.length?'Attention : '+data.convoyeur+' a déjà une mission à ce moment-là':(S.view.id?'Mission enregistrée':'Mission créée'));S.draft=null;formInputs=null;go({type:'mission',id:mid});
   }else if(f.id==='fPV'){
     readPVInputs();const d=S.draft;
     if(Object.keys(d.uploading).length){showErr('Attends la fin de l\'envoi des photos.');return}
@@ -925,7 +1160,9 @@ document.addEventListener('submit',async e=>{
       if(c&&sigDirty&&S.assets){const b=await new Promise(r=>c.toBlob(r,'image/png'));const res=await S.assets.upload(b,{type:'image/png'});signature=res.id}
       else if(!sigDirty)signature=null;}
     const now=new Date();
-    const pv={km:String(d.km).replace(/\s/g,''),carburant:d.carburant,dommages:d.dommages,signataire:d.signataire,photos:d.photos,signature,fait:now.toLocaleDateString('fr-FR')+' à '+now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
+    const btnS=f.querySelector('button[type=submit]');if(btnS)btnS.textContent='Enregistrement…';
+    const g=await Promise.race([getGeo(),new Promise(r=>setTimeout(()=>r(null),7000))]);const lieu=g?await lieuDe(g):'';
+    const pv={gps:g,lieu,meta:d.meta||{},km:String(d.km).replace(/\s/g,''),carburant:d.carburant,dommages:d.dommages,signataire:d.signataire,photos:d.photos,signature,fait:now.toLocaleDateString('fr-FR')+' à '+now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
     const upd={[S.view.phase]:pv};
     const m=S.missions.find(x=>x.id===S.view.id)||{};
     if(S.view.phase==='pvDepart'&&(!m.statut||m.statut==='a_faire'))upd.statut='en_cours';
@@ -938,11 +1175,17 @@ document.addEventListener('submit',async e=>{
     if(S.view.id)await S.db.doc('frais/'+S.view.id).update(data);else await S.db.collection('frais').add({...data,creeLe:Date.now()});
     const back=S.view.back||null;
     S.draft=null;fraisInputs=null;toast('Frais enregistré');back?go(back):(S.view=null,render());
+  }else if(f.id==='fClient'){
+    const data={nom:val('c_nom'),tel:val('c_ctel'),email:val('c_email'),adresse:val('c_adresse'),notes:val('c_notes')};
+    if(!data.nom){showErr('Indique le nom du client.');return}
+    let cid=S.view.id;
+    if(cid)await S.db.doc('clients/'+cid).update(data);else{const ref=await S.db.collection('clients').add({...data,cree:Date.now()});cid=ref.id}
+    toast('Client enregistré');go({type:'client',id:cid});
   }else if(f.id==='fConfig'){
     const conv=[0,1,2,3].map(i=>val('c_conv'+i)).filter(Boolean);
     if(!conv.length){showErr('Indique au moins un convoyeur.');return}
     if(S.draft&&S.draft.uploading&&Object.keys(S.draft.uploading).length){showErr('Attends la fin de l\'envoi de la photo.');return}
-    await S.db.doc('config/equipe').set({convoyeurs:conv,societe:val('c_societe'),tel:val('c_tel'),tel2:val('c_tel2'),cover:null});formInputs=null;toast('Équipe enregistrée');
+    await S.db.doc('config/equipe').set({convoyeurs:conv,societe:val('c_societe'),tel:val('c_tel'),tel2:val('c_tel2'),tarifKm:val('c_tarifKm').replace(',','.'),prixMin:val('c_prixMin').replace(',','.'),cover:null});formInputs=null;toast('Équipe enregistrée');
   }
   }catch(err){showErr('Enregistrement impossible : '+(err&&err.code==='not_granted'?'tu n\'as pas le droit de modifier cette appli.':(err&&err.message)||'réessaie.'))}
   finally{if(btn&&document.body.contains(btn))btn.disabled=false}
