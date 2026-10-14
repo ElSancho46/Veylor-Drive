@@ -39,6 +39,12 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 #app{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;bottom:auto;height:calc(var(--appH,100vh) - env(safe-area-inset-top,0px));overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:env(safe-area-inset-bottom,0px)}
 .top{top:0!important}
 .grid2>*{min-width:0}
+.addr{position:relative}
+.sugg{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;overflow:hidden;z-index:20;box-shadow:0 12px 30px rgba(0,0,0,.6)}
+.sugg button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:11px 13px;font-weight:600;font-size:.95rem;color:var(--fg)}
+.sugg button:last-child{border-bottom:0}
+.sugg button small{display:block;font-weight:400;color:var(--muted);font-size:.8rem;margin-top:2px}
+.sugg .none{padding:11px 13px;color:var(--muted);font-weight:400;font-size:.88rem}
 input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;width:100%;min-height:46px;text-align:left}
 input::-webkit-date-and-time-value{text-align:left;margin:0}
 input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.6}
@@ -449,6 +455,7 @@ function render(){
   }
   app.innerHTML=h+(S.view&&isForm()?'':tabs());
   if(S.view&&S.view.type==='pv')setupSignature();
+  if(S.view&&S.view.type==='missionForm'){setupAddr('m_depart');setupAddr('m_arrivee')}
   restoreFraisInputs();
 }
 
@@ -572,8 +579,8 @@ function viewMissionForm(){
    <label>Client<input id="m_client" value="${esc(m.client)}" placeholder="Garage, particulier, loueur…" autocomplete="off"></label>
    <label>Téléphone du client<input id="m_tel" type="tel" value="${esc(m.tel)}" placeholder="06 12 34 56 78"></label>
    <div class="grid2"><label>Date<input id="m_date" type="date" value="${esc(m.date)}"></label><label>Heure<input id="m_heure" type="time" value="${esc(m.heure)}"></label></div>
-   <label>Adresse de départ<input id="m_depart" value="${esc(m.depart)}" placeholder="12 rue de la Gare, 46000 Cahors"></label>
-   <label>Adresse d'arrivée<input id="m_arrivee" value="${esc(m.arrivee)}" placeholder="Adresse de livraison"></label>
+   <label class="addr">Adresse de départ<input id="m_depart" value="${esc(m.depart)}" placeholder="Commence à taper l'adresse…" autocomplete="off" autocorrect="off"><div class="sugg" hidden></div></label>
+   <label class="addr">Adresse d'arrivée<input id="m_arrivee" value="${esc(m.arrivee)}" placeholder="Commence à taper l'adresse…" autocomplete="off" autocorrect="off"><div class="sugg" hidden></div></label>
    <label>Contact à la livraison <small>Nom et téléphone de la personne qui réceptionne</small><input id="m_contactArrivee" value="${esc(m.contactArrivee)}"></label>
    <div class="grid2"><label>Prix (€)<input id="m_prix" inputmode="decimal" value="${esc(m.prix)}" placeholder="180"></label><label>Convoyeur<select id="m_convoyeur">${opts(S.config.convoyeurs,m.convoyeur)}</select></label></div>
    <label>Notes<textarea id="m_notes" placeholder="Clés à l'accueil, carte carburant fournie…">${esc(m.notes)}</textarea></label>
@@ -744,6 +751,21 @@ function startSmoke(){
     x.globalAlpha=1;
     if(!still)smokeRAF=requestAnimationFrame(frame);
   };frame();
+}
+
+/* ---------- Adresses (Base Adresse Nationale) ---------- */
+function setupAddr(id){
+  const inp=document.getElementById(id);if(!inp)return;const box=inp.parentNode.querySelector('.sugg');let t=null,ctrl=null,seq=0;
+  const hide=()=>{box.hidden=true;box.innerHTML=''};
+  inp.addEventListener('input',()=>{clearTimeout(t);const q=inp.value.trim();if(q.length<3){hide();return}
+    t=setTimeout(async()=>{const my=++seq;try{if(ctrl)ctrl.abort();ctrl=new AbortController();
+      const r=await fetch('https://data.geopf.fr/geocodage/search?autocomplete=1&limit=6&q='+encodeURIComponent(q),{signal:ctrl.signal});
+      const j=await r.json();if(my!==seq||document.activeElement!==inp)return;
+      const f=(j.features||[]).map(x=>x.properties||{}).filter(p=>p.label);
+      box.innerHTML=f.length?f.map(p=>{const main=p.name||p.label;const sub=[p.postcode,p.city].filter(Boolean).join(' ');return `<button type="button" data-label="${esc(p.label)}">${esc(main)}<small>${esc(sub)}${p.context?' · '+esc(String(p.context).split(',').slice(-1)[0].trim()):''}</small></button>`}).join(''):'<div class="none">Aucune adresse trouvée, tu peux la saisir à la main.</div>';
+      box.hidden=false}catch(e){if(e.name!=='AbortError')hide()}},250)});
+  box.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;e.preventDefault();inp.value=b.dataset.label;hide();inp.blur()});
+  inp.addEventListener('blur',()=>setTimeout(hide,150));
 }
 
 /* ---------- Photos ---------- */
