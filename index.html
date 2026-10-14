@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Veylor Drive">
 <meta name="theme-color" content="#0A0A0A">
 <script>
 (function(){function setH(){var st=window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
- var h=window.innerHeight;if(st&&screen&&screen.height){var portrait=window.innerWidth<window.innerHeight;var full=portrait?Math.max(screen.height,screen.width):Math.min(screen.height,screen.width);if(full>h)h=full}
+ var h=window.innerHeight;
  document.documentElement.style.setProperty('--appH',h+'px')}
  setH();window.addEventListener('resize',setH);window.addEventListener('orientationchange',function(){setTimeout(setH,300)})})();
 </script>
