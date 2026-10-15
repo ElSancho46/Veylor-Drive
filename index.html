@@ -66,6 +66,18 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 .tag-today{background:var(--fg);color:var(--bg);font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:3px 8px}
 .padd{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--fg);font-size:1.1rem;font-weight:700;line-height:1}
 .pfree{padding:0 14px 12px;color:var(--dim);font-size:.85rem}
+.irow{background:repeating-linear-gradient(-45deg,rgba(255,255,255,.035) 0 6px,transparent 6px 12px)}
+.irow .pmain b{color:var(--muted)}
+.ipill{border-style:dashed;color:var(--muted);border-color:var(--dim)}
+.padd.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.pchoice{display:flex;gap:8px;padding:0 14px 12px}
+.pchoice .btn{flex:1}
+.daypick{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.dchip{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 0;display:flex;flex-direction:column;align-items:center;color:var(--muted)}
+.dchip small{font-size:.66rem;text-transform:uppercase;letter-spacing:.04em}
+.dchip b{font-size:1rem;color:var(--fg)}
+.dchip[aria-pressed="true"]{background:var(--fg);border-color:var(--fg)}
+.dchip[aria-pressed="true"] small,.dchip[aria-pressed="true"] b{color:var(--bg)}
 .prow{display:grid;grid-template-columns:50px 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 12px 10px 14px;color:var(--fg)}
 .list .prow{background:var(--surface);border:1px solid var(--line);border-radius:14px}
 .prow.clash{background:rgba(229,72,77,.12)}
@@ -367,7 +379,7 @@ const MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','
 const eur=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'});
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 
-const S={db:null,assets:null,downloads:null,missions:[],frais:[],clients:[],clientQ:'',semaine:null,config:{convoyeurs:['Rafael'],societe:'',tel:'',tel2:'',tarifKm:'',prixMin:''},
+const S={db:null,assets:null,downloads:null,missions:[],frais:[],clients:[],indispos:[],addFor:null,clientQ:'',semaine:null,config:{convoyeurs:['Rafael'],societe:'',tel:'',tel2:'',tarifKm:'',prixMin:''},
   loaded:{m:false,f:false},noDb:false,tab:'missions',view:null,filtre:'avenir',who:'tous',mois:today().slice(0,7),pending:false,draft:null,confirm:null,busy:false,slide:0,user:null,authReady:false};
 
 const $=s=>document.querySelector(s);
@@ -388,7 +400,7 @@ const fmtDate=d=>{if(!d)return '';const [y,m,j]=d.split('-');return +j+' '+MOIS[
 const shortDate=d=>{if(!d)return 'Sans date';const [,m,j]=d.split('-');const t=today();if(d===t)return "Aujourd'hui";return +j+' '+MOIS[+m-1].slice(0,4)+(MOIS[+m-1].length>4?'.':'')};
 let toastT;function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,2600)}
 
-function isForm(){return S.view?['missionForm','pv','fraisForm','clientForm'].includes(S.view.type):S.tab==='reglages'}
+function isForm(){return S.view?['missionForm','pv','fraisForm','clientForm','indispoForm'].includes(S.view.type):S.tab==='reglages'}
 function update(){if(isForm()){S.pending=true;return}render()}
 function go(view){S.view=view;S.confirm=null;S.pending=false;formInputs=null;render();($('#app').scrollTop=0)}
 
@@ -432,6 +444,7 @@ async function init(){
     S.user=u;S.authReady=true;unsubs.forEach(f=>f());unsubs=[];S.loaded={m:false,f:false};
     if(u){
       unsubs.push(db.collection('missions').onSnapshot(s=>{S.missions=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.m=true;update()},e=>{toast('Missions indisponibles : '+e.message)}));
+      unsubs.push(db.collection('indispos').onSnapshot(s=>{S.indispos=s.docs.map(d=>({id:d.id,...d.data()}));update()},()=>{}));
       unsubs.push(db.collection('clients').onSnapshot(s=>{S.clients=s.docs.map(d=>({id:d.id,...d.data()}));update()},()=>{}));
       unsubs.push(db.collection('frais').onSnapshot(s=>{S.frais=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.f=true;update()},()=>{}));
       unsubs.push(db.doc('config/equipe').onSnapshot(s=>{if(s.exists){const c=s.data()||{};S.config={convoyeurs:(c.convoyeurs&&c.convoyeurs.length)?c.convoyeurs:['Rafael'],societe:c.societe||'',tel:c.tel||'',tel2:c.tel2||'',cover:c.cover||null,tarifKm:c.tarifKm||'',prixMin:c.prixMin||''}}update()},()=>{}));
@@ -491,6 +504,7 @@ function render(){
     else if(t==='fraisForm')h=viewFraisForm();
     else if(t==='client')h=viewClient();
     else if(t==='clientForm')h=viewClientForm();
+    else if(t==='indispoForm')h=viewIndispoForm();
   }else{
     if(S.tab==='missions')h=viewMissions();
     else if(S.tab==='frais')h=viewFrais();
@@ -504,7 +518,7 @@ function render(){
   if(S.view&&S.view.type==='missionForm'){setupAddr('m_depart');setupAddr('m_arrivee');setupClientSugg();if(S.draft&&!S.draft.route)scheduleRoute(50)}
   if(S.view&&S.view.type==='clientForm')setupAddr('c_adresse');
   if(!S.view&&S.tab==='clients')setupClientSearch();
-  restoreFraisInputs();
+  restoreFraisInputs();restoreIndispoInputs();
 }
 
 function missionCard(m){
@@ -585,6 +599,7 @@ function viewMission(){
     <h1 class="display">${esc(m.marque||'Véhicule')}${m.modele?` <span style="color:var(--muted)">${esc(m.modele)}</span>`:''}</h1>
     <div class="meta">${plate(m.plaque,true)}${pill(m.statut)}</div>
    </div>
+   ${(x=>x.length?`<div class="banner" style="border-color:var(--danger);color:var(--fg)">⚠ ${esc(m.convoyeur||'')} est indisponible pendant cette mission : ${esc(indispoLabel(x[0]))}, ${esc(indispoHoraire(x[0]))}.</div>`:'')(indispoPour(m))}
    <div class="steps">${STATUTS.map(([k,l],i)=>`<button class="step${i<=idx?' done':''}" data-act="statut" data-v="${k}">${l}</button>`).join('')}</div>
 
    <div style="margin-top:14px"><a class="route" href="${waze(dest)}" target="_blank" rel="noopener">${routeSVG(m)}<div class="cta"><span>${aller?'Aller chercher le véhicule':'Livrer le véhicule'}</span><span>Waze →</span></div></a>
@@ -839,6 +854,13 @@ function chevauche(a,b){
   return sa<eb&&sb<ea;
 }
 function conflitsPour(m){return S.missions.filter(x=>x.id!==m.id&&x.statut!=='payee'&&chevauche(m,x))}
+const dayAbs=d=>Math.round(Date.parse(d+'T12:00:00Z')/86400000)*1440;
+function indispoInterval(i){const b=dayAbs(i.date);if(i.journee)return [b,b+1440];const s=minutesOf(i.debut)||0;let e=minutesOf(i.fin);if(e==null)e=s+60;if(e<=s)e+=1440;return [b+s,b+e]}
+function missionInterval(m){const b=dayAbs(m.date);const s=minutesOf(m.heure);if(s==null)return [b,b+1440];return [b+s,b+s+(num(m.dureeMin)||120)]}
+function indispoPour(m){if(!m||!m.date)return [];const [a,b]=missionInterval(m);return S.indispos.filter(i=>i.convoyeur===m.convoyeur&&(([c,d])=>a<d&&c<b)(indispoInterval(i)))}
+const MOTIFS=['Travail','Rendez-vous','Perso','Autre'];
+function indispoLabel(i){return [i.motif||'Indisponible',i.detail].filter(Boolean).join(' · ')}
+function indispoHoraire(i){if(i.journee)return 'Toute la journée';const nuit=minutesOf(i.fin)!=null&&minutesOf(i.fin)<=minutesOf(i.debut);return `${i.debut||'?'} → ${i.fin||'?'}${nuit?' (lendemain)':''}`}
 
 /* ---------- Planning ---------- */
 function viewPlanning(){
@@ -849,10 +871,21 @@ function viewPlanning(){
   const ca=inWeek.reduce((s,m)=>s+num(m.prix),0),km=inWeek.reduce((s,m)=>s+num(m.distanceKm),0);
   const end=days[6];const titre=days[0].getMonth()===end.getMonth()?`${days[0].getDate()} – ${end.getDate()} ${MOIS[end.getMonth()]}`:`${days[0].getDate()} ${MOIS[days[0].getMonth()].slice(0,4)}. – ${end.getDate()} ${MOIS[end.getMonth()].slice(0,4)}.`;
   const initiale=n=>esc((n||'?').slice(0,1).toUpperCase());
-  const row=m=>{const clash=conflitsPour(m).length>0;return `<button class="prow${clash?' clash':''}" data-act="open" data-id="${esc(m.id)}">
+  const row=m=>{const ind=indispoPour(m);const clash=conflitsPour(m).length>0||ind.length>0;return `<button class="prow${clash?' clash':''}" data-act="open" data-id="${esc(m.id)}">
      <span class="ptime mono">${esc(m.heure||'--:--')}</span>
-     <span class="pmain"><b>${esc([m.marque,m.modele].filter(Boolean).join(' ')||m.client||'Mission')}</b><small>${esc(ville(m.depart))} → ${esc(ville(m.arrivee))}${m.distanceKm?' · '+esc(fmtKm(m.distanceKm)):''}</small>${clash?'<small class="warn">⚠ Chevauchement</small>':''}</span>
+     <span class="pmain"><b>${esc([m.marque,m.modele].filter(Boolean).join(' ')||m.client||'Mission')}</b><small>${esc(ville(m.depart))} → ${esc(ville(m.arrivee))}${m.distanceKm?' · '+esc(fmtKm(m.distanceKm)):''}</small>${ind.length?`<small class="warn">⚠ Indisponible : ${esc(ind[0].motif||'')}</small>`:clash?'<small class="warn">⚠ Chevauchement</small>':''}</span>
      <span class="pside"><span class="who" title="${esc(m.convoyeur||'')}">${initiale(m.convoyeur)}</span>${pill(m.statut)}</span></button>`};
+  const irow=(i,suite)=>`<button class="prow irow" data-act="openIndispo" data-id="${esc(i.id)}">
+     <span class="ptime mono">${suite?'…':(i.journee?'Jour':esc(i.debut||''))}</span>
+     <span class="pmain"><b>${esc(indispoLabel(i))}</b><small>${suite?'Jusqu\'à '+esc(i.fin):esc(indispoHoraire(i))}</small></span>
+     <span class="pside"><span class="who" title="${esc(i.convoyeur||'')}">${initiale(i.convoyeur)}</span><span class="pill ipill">Indispo</span></span></button>`;
+  let inds=S.indispos.slice();if(S.who!=='tous')inds=inds.filter(i=>i.convoyeur===S.who);
+  const prevDay=id=>{const x=new Date(id+'T12:00:00');x.setDate(x.getDate()-1);return isoD(x)};
+  const dayItems=id=>{const items=[];
+    ms.filter(m=>m.date===id).forEach(m=>items.push({k:m.heure||'99:98',h:row(m)}));
+    inds.filter(i=>i.date===id).forEach(i=>items.push({k:i.journee?'00:00':(i.debut||'00:00'),h:irow(i,false)}));
+    inds.filter(i=>i.date===prevDay(id)&&!i.journee&&minutesOf(i.fin)!=null&&minutesOf(i.fin)<=minutesOf(i.debut)).forEach(i=>items.push({k:'00:00',h:irow(i,true)}));
+    return items.sort((a,b)=>a.k.localeCompare(b.k)).map(x=>x.h)};
   const sansDate=ms.filter(m=>!m.date&&m.statut!=='livree'&&m.statut!=='payee');
   return `<div class="wrap">${mini('Planning')}
    <div class="monthnav"><button class="btn small" data-act="sem" data-v="-1" aria-label="Semaine précédente">←</button><b>${esc(titre)}</b><button class="btn small" data-act="sem" data-v="1" aria-label="Semaine suivante">→</button></div>
@@ -861,11 +894,43 @@ function viewPlanning(){
    ${S.config.convoyeurs.length>1?`<div style="margin-top:14px">${whoChips()}</div>`:''}
    <div class="pdays">${days.map(d=>{const id=isoD(d);const list=ms.filter(m=>m.date===id).sort((a,b)=>(a.heure||'99').localeCompare(b.heure||'99'));
      const jour=d.toLocaleDateString('fr-FR',{weekday:'long'});
-     return `<section class="pday${id===t?' today':''}${id<t?' past':''}"><div class="phead"><span><b>${esc(jour.charAt(0).toUpperCase()+jour.slice(1))}</b> ${d.getDate()} ${esc(MOIS[d.getMonth()])}</span>${id===t?'<span class="tag-today">Aujourd\'hui</span>':''}<button class="padd" data-act="newMissionDay" data-v="${id}" aria-label="Ajouter une mission ce jour">+</button></div>
-       ${list.length?list.map(row).join(''):'<div class="pfree">Libre</div>'}</section>`}).join('')}</div>
+     return `<section class="pday${id===t?' today':''}${id<t?' past':''}"><div class="phead"><span><b>${esc(jour.charAt(0).toUpperCase()+jour.slice(1))}</b> ${d.getDate()} ${esc(MOIS[d.getMonth()])}</span>${id===t?'<span class="tag-today">Aujourd\'hui</span>':''}<button class="padd${S.addFor===id?' on':''}" data-act="addFor" data-v="${id}" aria-label="Ajouter">${S.addFor===id?'×':'+'}</button></div>
+       ${S.addFor===id?`<div class="pchoice"><button class="btn small primary" data-act="newMissionDay" data-v="${id}">+ Mission</button><button class="btn small" data-act="newIndispo" data-v="${id}">+ Indisponible</button></div>`:''}
+       ${(it=>it.length?it.join(''):'<div class="pfree">Libre</div>')(dayItems(id))}</section>`}).join('')}</div>
    ${sansDate.length?`<h2>Sans date</h2><div class="list" style="margin-top:0">${sansDate.map(row).join('')}</div>`:''}
   </div>`;
 }
+
+/* ---------- Indisponibilités ---------- */
+const PRESETS=[['journee','Toute la journée',null,null],['jour','Jour 07h–19h','07:00','19:00'],['nuit','Nuit 19h–07h','19:00','07:00'],['matin','Matin 08h–12h','08:00','12:00'],['aprem','Après-midi 14h–18h','14:00','18:00']];
+function viewIndispoForm(){
+  const i=S.view.id?(S.indispos.find(x=>x.id===S.view.id)||{}):null;
+  if(!S.draft){const base=S.view.date||today();const mon=mondayOf(new Date(base+'T12:00:00'));
+    S.draft=i?{motif:i.motif||'Travail',journee:!!i.journee,days:[i.date],week:isoD(mon)}:{motif:'Travail',journee:false,days:[base],week:isoD(mon),debut:'07:00',fin:'19:00'}}
+  const d=S.draft;const mon=new Date(d.week+'T12:00:00');const wd=[...Array(7)].map((_,k)=>{const x=new Date(mon);x.setDate(x.getDate()+k);return x});
+  const conv=i?i.convoyeur:(S.who!=='tous'?S.who:S.config.convoyeurs[0]);
+  const dv=i?i.debut:(d.debut||''),fv=i?i.fin:(d.fin||'');
+  return `<div class="wrap"><div class="top"><button class="back" data-act="cancelForm">← Annuler</button></div>
+  <div class="formhead"><span class="label">${i?'Modifier':'Nouvelle'}</span><h1 class="display">Indisponibilité</h1></div>
+  <form id="fIndispo" novalidate>
+   <label>Qui<select id="i_conv">${opts(S.config.convoyeurs,conv)}</select></label>
+   <div><label style="margin-bottom:8px">Motif</label><div class="chips" style="flex-wrap:wrap">${MOTIFS.map(m=>`<button type="button" class="chip" data-act="iMotif" data-v="${m}" aria-pressed="${d.motif===m}">${m}</button>`).join('')}</div></div>
+   <label>Précision <small>Facultatif : Fiducial, dentiste, vacances…</small><input id="i_detail" value="${esc(i?i.detail:(d.detail||''))}" placeholder="${d.motif==='Travail'?'Fiducial':''}" autocomplete="off"></label>
+   <div><label style="margin-bottom:8px">Horaires</label><div class="chips" style="flex-wrap:wrap">${PRESETS.map(([k,l])=>`<button type="button" class="chip" data-act="iPreset" data-v="${k}" aria-pressed="${k==='journee'?d.journee:(!d.journee&&d.preset===k)}">${l}</button>`).join('')}</div>
+    ${d.journee?'':`<div class="grid2" style="margin-top:10px"><label>Début<input id="i_debut" type="time" value="${esc(dv)}"></label><label>Fin<input id="i_fin" type="time" value="${esc(fv)}"></label></div><div class="muted" style="font-size:.82rem;margin-top:6px">Si la fin est plus tôt que le début, elle compte pour le lendemain (travail de nuit).</div>`}</div>
+   ${i?`<label>Date<input id="i_date" type="date" value="${esc(i.date)}"></label>`:`<div><div class="row between" style="margin-bottom:8px"><label>Jours <small>Coche plusieurs jours pour aller plus vite</small></label></div>
+     <div class="row between" style="margin-bottom:8px"><button type="button" class="btn small" data-act="iWeek" data-v="-1">←</button><b style="font-size:.9rem">Semaine du ${wd[0].getDate()} ${esc(MOIS[wd[0].getMonth()])}</b><button type="button" class="btn small" data-act="iWeek" data-v="1">→</button></div>
+     <div class="daypick">${wd.map(x=>{const id=isoD(x);return `<button type="button" class="dchip" data-act="iDay" data-v="${id}" aria-pressed="${d.days.includes(id)}"><small>${esc(x.toLocaleDateString('fr-FR',{weekday:'short'}).replace('.',''))}</small><b>${x.getDate()}</b></button>`}).join('')}</div>
+     <div class="muted" style="font-size:.85rem;margin-top:6px">${d.days.length} jour${d.days.length>1?'s':''} sélectionné${d.days.length>1?'s':''}</div></div>`}
+   <p class="err" id="fErr" hidden></p>
+   <button class="btn primary block" type="submit">Enregistrer</button>
+  </form>
+  ${i?`<div style="margin-top:24px">${S.confirm===i.id?`<div class="confirm"><b>Supprimer cette indisponibilité ?</b><div class="row"><button class="btn danger" data-act="delIndispoOk">Oui, supprimer</button><button class="btn" data-act="cancelConfirm">Annuler</button></div></div>`:'<button class="btn danger small" data-act="delIndispo">Supprimer</button>'}</div>`:''}
+  </div>`;
+}
+function readIndispoInputs(){const d=S.draft;if(!d)return;const g=id=>{const el=$('#'+id);return el?el.value:undefined};['i_detail','i_debut','i_fin','i_conv','i_date'].forEach(k=>{const v=g(k);if(v!==undefined)d['_'+k]=v});
+  if(d._i_debut!==undefined)d.debut=d._i_debut;if(d._i_fin!==undefined)d.fin=d._i_fin;if(d._i_detail!==undefined)d.detail=d._i_detail}
+function restoreIndispoInputs(){const d=S.draft;if(!d||!S.view||S.view.type!=='indispoForm')return;[['i_detail','_i_detail'],['i_conv','_i_conv'],['i_date','_i_date']].forEach(([id,k])=>{const el=$('#'+id);if(el&&d[k]!==undefined)el.value=d[k]})}
 
 /* ---------- Clients ---------- */
 function clientRow(c){const ms=missionsOfClient(c);const ca=ms.reduce((s,m)=>s+num(m.prix),0);
@@ -1076,7 +1141,17 @@ document.addEventListener('click',async e=>{
   case 'delClient':S.confirm=S.view.id;render();break;
   case 'delClientOk':{const cid=S.view.id;try{await S.db.doc('clients/'+cid).delete();S.view=null;S.confirm=null;render();toast('Client supprimé')}catch(err){toast('Suppression impossible')}break}
   case 'missionForClient':{const c=S.clients.find(x=>x.id===S.view.id);if(!c)return;S.draft=null;formInputs=null;go({type:'missionForm',prefill:{client:c.nom,tel:c.tel||'',depart:c.adresse||'',clientId:c.id}});break}
-  case 'newMissionDay':S.draft=null;formInputs=null;go({type:'missionForm',date:v});break;
+  case 'newMissionDay':S.addFor=null;S.draft=null;formInputs=null;go({type:'missionForm',date:v});break;
+  case 'addFor':S.addFor=S.addFor===v?null:v;render();break;
+  case 'newIndispo':S.addFor=null;S.draft=null;go({type:'indispoForm',date:v});break;
+  case 'openIndispo':S.draft=null;go({type:'indispoForm',id});break;
+  case 'iMotif':readIndispoInputs();S.draft.motif=v;render();break;
+  case 'iPreset':{readIndispoInputs();const p=PRESETS.find(x=>x[0]===v);if(!p)break;if(v==='journee'){S.draft.journee=!S.draft.journee}else{S.draft.journee=false;S.draft.preset=v;S.draft.debut=p[2];S.draft.fin=p[3];['i_debut','i_fin'].forEach(k=>delete S.draft['_'+k])}render();
+    if(!S.draft.journee){const a=$('#i_debut'),b=$('#i_fin');if(a)a.value=S.draft.debut||'';if(b)b.value=S.draft.fin||''}break}
+  case 'iDay':{readIndispoInputs();const ds=S.draft.days;const k=ds.indexOf(v);if(k>=0)ds.splice(k,1);else ds.push(v);render();break}
+  case 'iWeek':{readIndispoInputs();const x=new Date(S.draft.week+'T12:00:00');x.setDate(x.getDate()+7*(+v));S.draft.week=isoD(x);render();break}
+  case 'delIndispo':S.confirm=S.view.id;render();break;
+  case 'delIndispoOk':{const iid=S.view.id;try{await S.db.doc('indispos/'+iid).delete();S.view=null;S.confirm=null;S.draft=null;render();toast('Indisponibilité supprimée')}catch(err){toast('Suppression impossible')}break}
   case 'sem':{const d=new Date((S.semaine||isoD(mondayOf(new Date())))+'T12:00:00');d.setDate(d.getDate()+7*(+v));S.semaine=isoD(mondayOf(d));render();break}
   case 'semNow':S.semaine=isoD(mondayOf(new Date()));render();break;
   case 'applyPrice':{const el=$('#m_prix');if(el){el.value=v;toast('Prix appliqué : '+v+' €')}break}
@@ -1089,6 +1164,7 @@ document.addEventListener('click',async e=>{
   case 'open':go({type:'mission',id});break;
   case 'back':S.view=null;S.draft=null;render();break;
   case 'cancelForm':{const from=S.view;S.draft=null;fraisInputs=null;formInputs=null;
+    if(from.type==='indispoForm'){S.view=null;render();break}
     if(from.type==='clientForm'&&from.id)go({type:'client',id:from.id});
     else if(from.type==='pv'||(from.type==='missionForm'&&from.id))go({type:'mission',id:from.id});
     else if(from.type==='fraisForm'&&from.back)go(from.back);else{S.view=null;render()}break}
@@ -1150,8 +1226,8 @@ document.addEventListener('submit',async e=>{
     let mid=S.view.id;
     if(mid)await S.db.doc('missions/'+mid).update(data);
     else{const ref=await S.db.collection('missions').add({...data,statut:'a_faire',creeLe:Date.now()});mid=ref.id}
-    const clash=conflitsPour({...data,id:mid});
-    toast(clash.length?'Attention : '+data.convoyeur+' a déjà une mission à ce moment-là':(S.view.id?'Mission enregistrée':'Mission créée'));S.draft=null;formInputs=null;go({type:'mission',id:mid});
+    const clash=[...conflitsPour({...data,id:mid}),...indispoPour(data)];
+    toast(clash.length?'Attention : '+data.convoyeur+' n\'est pas disponible à ce moment-là':(S.view.id?'Mission enregistrée':'Mission créée'));S.draft=null;formInputs=null;go({type:'mission',id:mid});
   }else if(f.id==='fPV'){
     readPVInputs();const d=S.draft;
     if(Object.keys(d.uploading).length){showErr('Attends la fin de l\'envoi des photos.');return}
@@ -1175,6 +1251,15 @@ document.addEventListener('submit',async e=>{
     if(S.view.id)await S.db.doc('frais/'+S.view.id).update(data);else await S.db.collection('frais').add({...data,creeLe:Date.now()});
     const back=S.view.back||null;
     S.draft=null;fraisInputs=null;toast('Frais enregistré');back?go(back):(S.view=null,render());
+  }else if(f.id==='fIndispo'){
+    readIndispoInputs();const d=S.draft;
+    const base={convoyeur:val('i_conv'),motif:d.motif,detail:val('i_detail'),journee:!!d.journee,debut:d.journee?'':val('i_debut'),fin:d.journee?'':val('i_fin')};
+    if(!base.journee&&(!base.debut||!base.fin)){showErr('Indique l\'heure de début et de fin, ou choisis « Toute la journée ».');return}
+    if(S.view.id){const dt=val('i_date');if(!dt){showErr('Indique la date.');return}await S.db.doc('indispos/'+S.view.id).update({...base,date:dt});toast('Indisponibilité enregistrée')}
+    else{if(!d.days.length){showErr('Choisis au moins un jour.');return}
+      for(const dt of d.days.slice().sort())await S.db.collection('indispos').add({...base,date:dt,cree:Date.now()});
+      toast(d.days.length>1?d.days.length+' jours ajoutés au planning':'Ajouté au planning')}
+    S.draft=null;S.view=null;S.tab='planning';render();
   }else if(f.id==='fClient'){
     const data={nom:val('c_nom'),tel:val('c_ctel'),email:val('c_email'),adresse:val('c_adresse'),notes:val('c_notes')};
     if(!data.nom){showErr('Indique le nom du client.');return}
