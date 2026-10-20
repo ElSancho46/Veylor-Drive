@@ -452,6 +452,7 @@ async function init(){
   firebase.auth().onAuthStateChanged(u=>{
     S.user=u;S.authReady=true;unsubs.forEach(f=>f());unsubs=[];S.loaded={m:false,f:false};
     if(u){
+      initNotifs();
       unsubs.push(db.collection('missions').onSnapshot(s=>{S.missions=s.docs.map(d=>({id:d.id,...d.data()}));S.loaded.m=true;update()},e=>{toast('Missions indisponibles : '+e.message)}));
       unsubs.push(db.collection('indispos').onSnapshot(s=>{S.indispos=s.docs.map(d=>({id:d.id,...d.data()}));update()},()=>{}));
       unsubs.push(db.collection('clients').onSnapshot(s=>{S.clients=s.docs.map(d=>({id:d.id,...d.data()}));update()},()=>{}));
@@ -1063,8 +1064,31 @@ async function enableNotifs(){
     if(!token)throw new Error('aucun jeton');
     const id=await sha(token);
     await S.db.collection('tokens').doc(id).set({token,uid:S.user.uid,email:S.user.email||'',nom:lsGet('vd_me')||'',appareil:navigator.userAgent.slice(0,120),maj:Date.now()});
-    lsSet('vd_tok',id);say('✅ Notifications activées sur ce téléphone.');render();
+    lsSet('vd_tok',id);lsSet('vd_tok_maj',String(Date.now()));notifInitDone=false;initNotifs();say('✅ Notifications activées sur ce téléphone.');render();
   }catch(e){say('Activation impossible : '+(e.message||e))}
+}
+/* Au démarrage : rafraîchit le jeton et affiche les notifications reçues quand l'appli est ouverte */
+let notifInitDone=false;
+async function initNotifs(){
+  if(notifInitDone||!VAPID_KEY||!NOTIF_URL||!S.user||!notifSupported()||Notification.permission!=='granted')return;
+  notifInitDone=true;
+  try{
+    const reg=await navigator.serviceWorker.register('firebase-messaging-sw.js');await navigator.serviceWorker.ready;
+    const msg=firebase.messaging();
+    msg.onMessage(p=>{
+      const n=p.notification||{},d=p.data||{};const title=n.title||d.title||'Veylor Drive',body=n.body||d.body||'';
+      toast(title+(body?' — '+body:''));
+      try{reg.showNotification(title,{body,icon:'apple-touch-icon.png',badge:'favicon-32.png',tag:'vd-'+Date.now()})}catch(e){}
+    });
+    const token=await msg.getToken({vapidKey:VAPID_KEY,serviceWorkerRegistration:reg});
+    if(!token)return;
+    const id=await sha(token);
+    if(lsGet('vd_tok')!==id||!lsGet('vd_tok_maj')||Date.now()-(+lsGet('vd_tok_maj'))>7*864e5){
+      await S.db.collection('tokens').doc(id).set({token,uid:S.user.uid,email:S.user.email||'',nom:lsGet('vd_me')||'',appareil:navigator.userAgent.slice(0,120),maj:Date.now()});
+      const old=lsGet('vd_tok');if(old&&old!==id){try{await S.db.collection('tokens').doc(old).delete()}catch(e){}}
+      lsSet('vd_tok',id);lsSet('vd_tok_maj',String(Date.now()));
+    }
+  }catch(e){notifInitDone=false}
 }
 function notifPanel(){
   const on=lsGet('vd_tok')&&notifSupported()&&Notification.permission==='granted';
